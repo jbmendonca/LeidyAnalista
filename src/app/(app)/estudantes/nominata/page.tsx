@@ -3,7 +3,13 @@ import { redirect } from 'next/navigation'
 
 import { getAuthContext } from '@/server/auth-context'
 import { prisma } from '@/server/prisma'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { FormularioNominata } from './formulario-nominata'
 
 export const metadata: Metadata = {
@@ -24,12 +30,16 @@ export default async function PaginaNominata() {
   })
 
   return (
-    <main id="conteudo-principal" className="mx-auto w-full max-w-4xl space-y-6 px-4 py-8">
+    <main
+      id="conteudo-principal"
+      className="mx-auto w-full max-w-4xl space-y-6 px-4 py-8"
+    >
       <header className="space-y-1">
         <h1>Importar nominata</h1>
         <p className="text-sm text-texto-suave">
-          O cadastro prévio é o que permite à importação de resultados reconhecer as crianças em
-          vez de criá-las. Cada estudante cadastrado aqui recebe seu código único.
+          O cadastro prévio é o que permite à importação de resultados reconhecer as
+          crianças em vez de criá-las. Cada estudante cadastrado aqui recebe seu código
+          único.
         </p>
       </header>
 

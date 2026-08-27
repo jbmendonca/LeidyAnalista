@@ -69,8 +69,8 @@ export function FormularioNominata({ escolas }: { escolas: readonly OpcaoEscola[
             ))}
           </Select>
           <p id="ajuda-escola" className="text-rotulo text-texto-suave">
-            Ao selecionar uma escola, linhas de outra escola são recusadas em vez de importadas
-            no lugar errado.
+            Ao selecionar uma escola, linhas de outra escola são recusadas em vez de
+            importadas no lugar errado.
           </p>
         </div>
 
@@ -107,15 +107,17 @@ export function FormularioNominata({ escolas }: { escolas: readonly OpcaoEscola[
           {relatorio.aplicado ? (
             <Alert variante="sucesso" titulo="Nominata importada">
               {relatorio.criados} estudante{relatorio.criados === 1 ? '' : 's'} cadastrado
-              {relatorio.criados === 1 ? '' : 's'} com código único, {relatorio.jaExistentes}{' '}
-              já constava{relatorio.jaExistentes === 1 ? '' : 'm'} da base e{' '}
-              {relatorio.turmasCriadas} turma{relatorio.turmasCriadas === 1 ? '' : 's'} criada
+              {relatorio.criados === 1 ? '' : 's'} com código único,{' '}
+              {relatorio.jaExistentes} já constava
+              {relatorio.jaExistentes === 1 ? '' : 'm'} da base e{' '}
+              {relatorio.turmasCriadas} turma{relatorio.turmasCriadas === 1 ? '' : 's'}{' '}
+              criada
               {relatorio.turmasCriadas === 1 ? '' : 's'}.
             </Alert>
           ) : (
             <Alert variante="erro" titulo="Nada foi gravado">
-              O arquivo tem ocorrências que impedem a importação. Nenhum estudante foi criado —
-              corrija as linhas abaixo e envie novamente. Seriam cadastrados{' '}
+              O arquivo tem ocorrências que impedem a importação. Nenhum estudante foi
+              criado — corrija as linhas abaixo e envie novamente. Seriam cadastrados{' '}
               {relatorio.criaveis} estudante{relatorio.criaveis === 1 ? '' : 's'}.
             </Alert>
           )}
@@ -147,7 +149,9 @@ export function FormularioNominata({ escolas }: { escolas: readonly OpcaoEscola[
                 </TableHeader>
                 <TableBody>
                   {relatorio.problemas.map((problema, indice) => (
-                    <TableRow key={`${problema.codigo}-${problema.linha ?? 'geral'}-${indice}`}>
+                    <TableRow
+                      key={`${problema.codigo}-${problema.linha ?? 'geral'}-${indice}`}
+                    >
                       <TableCell numerica>{problema.linha ?? '—'}</TableCell>
                       <TableCell>{problema.severidade}</TableCell>
                       <TableCell>{problema.coluna ?? '—'}</TableCell>

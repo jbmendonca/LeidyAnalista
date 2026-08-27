@@ -2,7 +2,11 @@ import { Prisma } from '@prisma/client'
 
 import { prisma, type Tx } from '@/server/prisma'
 import { conflito, naoEncontrado } from '@/server/http-errors'
-import { assertSchoolInScope, schoolScopeFilter, type AuthContext } from '@/server/authorization'
+import {
+  assertSchoolInScope,
+  schoolScopeFilter,
+  type AuthContext,
+} from '@/server/authorization'
 import { gerarCodigoUnico } from '@/modules/students/domain/unique-code'
 
 /**

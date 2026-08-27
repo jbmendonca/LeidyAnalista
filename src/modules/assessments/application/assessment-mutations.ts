@@ -65,7 +65,7 @@ export async function criarAvaliacao(
     })
 
     await registrarAuditoria(tx, {
-      action: 'SETTINGS_CHANGE',
+      action: 'ASSESSMENT_CREATE',
       userId: autor.userId,
       entityType: ENTIDADE,
       entityId: avaliacao.id,
@@ -111,7 +111,7 @@ export async function atualizarAvaliacao(
     })
 
     await registrarAuditoria(tx, {
-      action: 'SETTINGS_CHANGE',
+      action: 'ASSESSMENT_UPDATE',
       userId: autor.userId,
       entityType: ENTIDADE,
       entityId: avaliacao.id,

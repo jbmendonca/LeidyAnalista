@@ -54,7 +54,7 @@ export async function criarEscola(
       })
 
       await registrarAuditoria(tx, {
-        action: 'SETTINGS_CHANGE',
+        action: 'SCHOOL_CREATE',
         userId: autor.userId,
         entityType: ENTIDADE,
         entityId: escola.id,
@@ -108,7 +108,7 @@ export async function atualizarEscola(
       })
 
       await registrarAuditoria(tx, {
-        action: 'SETTINGS_CHANGE',
+        action: 'SCHOOL_UPDATE',
         userId: autor.userId,
         entityType: ENTIDADE,
         entityId: escola.id,

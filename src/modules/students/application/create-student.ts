@@ -25,7 +25,8 @@ import {
  * O código único nasce aqui, na criação (FR-169), e nunca mais muda (FR-129).
  */
 
-export type OrigemCadastro = 'CADASTRO_INDIVIDUAL' | 'NOMINATA' | 'PRE_VISUALIZACAO_IMPORTACAO'
+export type OrigemCadastro =
+  'CADASTRO_INDIVIDUAL' | 'NOMINATA' | 'PRE_VISUALIZACAO_IMPORTACAO'
 
 /** A unicidade é garantida pela restrição do banco; a aleatoriedade só a torna improvável. */
 const TENTATIVAS = 5

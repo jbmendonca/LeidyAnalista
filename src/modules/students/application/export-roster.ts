@@ -84,8 +84,7 @@ export async function gerarCsvNominata(
     ].join(SEPARADOR),
   )
 
-  const conteudo =
-    BOM + [CABECALHOS.join(SEPARADOR), ...linhas].join(QUEBRA) + QUEBRA
+  const conteudo = BOM + [CABECALHOS.join(SEPARADOR), ...linhas].join(QUEBRA) + QUEBRA
 
   // A exportação não altera dado nenhum, mas leva dados de crianças para fora do sistema:
   // fica registrada, por identificador, como qualquer outro acesso relevante (FR-121).

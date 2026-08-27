@@ -69,8 +69,8 @@ export function FormularioEstudante({
       {estado.criado ? (
         <Alert variante="sucesso" titulo="Estudante cadastrado">
           Código único atribuído:{' '}
-          <span className="font-mono font-semibold">{estado.criado.uniqueCode}</span>. Ele é
-          permanente e deve acompanhar a criança nas próximas avaliações.
+          <span className="font-mono font-semibold">{estado.criado.uniqueCode}</span>. Ele
+          é permanente e deve acompanhar a criança nas próximas avaliações.
         </Alert>
       ) : null}
 
@@ -147,8 +147,8 @@ export function FormularioEstudante({
           descritoPor="ajuda-codigo-externo"
         />
         <p id="ajuda-codigo-externo" className="text-rotulo text-texto-suave">
-          Preencha apenas se a rede fornecer um identificador oficial. Ele é separado do código
-          único gerado pelo sistema.
+          Preencha apenas se a rede fornecer um identificador oficial. Ele é separado do
+          código único gerado pelo sistema.
         </p>
       </div>
 

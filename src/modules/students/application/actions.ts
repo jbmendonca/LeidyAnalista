@@ -40,7 +40,10 @@ function texto(formData: FormData, campo: string): string {
   return typeof valor === 'string' ? valor : ''
 }
 
-function tratar(erro: unknown, contexto: string): { erro: string; detalhes?: Record<string, string[]> } {
+function tratar(
+  erro: unknown,
+  contexto: string,
+): { erro: string; detalhes?: Record<string, string[]> } {
   if (erro instanceof AppError) {
     return {
       erro: erro.message,

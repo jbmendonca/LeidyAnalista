@@ -74,7 +74,9 @@ export const filtrosEstudantesSchema = z.object({
   busca: filtroOpcionalSchema,
   incluirInativos: z.coerce.boolean().default(false),
   pagina: z.coerce.number().int().min(1).default(1),
-  tamanho: z.coerce.number().int().min(1).max(500).default(100),
+  // O teto alto atende à exportação da nominata de uma rede inteira (FR-174); a listagem em
+  // tela usa o padrão.
+  tamanho: z.coerce.number().int().min(1).max(5000).default(100),
 })
 
 export type FiltrosEstudantes = z.infer<typeof filtrosEstudantesSchema>

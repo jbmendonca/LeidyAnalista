@@ -3,7 +3,13 @@ import { redirect } from 'next/navigation'
 
 import { getAuthContext } from '@/server/auth-context'
 import { prisma } from '@/server/prisma'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { EmptyState } from '@/components/data/empty-state'
 import { FormularioEstudante } from './formulario-estudante'
 
@@ -39,7 +45,10 @@ export default async function PaginaNovoEstudante() {
   ])
 
   return (
-    <main id="conteudo-principal" className="mx-auto w-full max-w-2xl space-y-6 px-4 py-8">
+    <main
+      id="conteudo-principal"
+      className="mx-auto w-full max-w-2xl space-y-6 px-4 py-8"
+    >
       <header className="space-y-1">
         <h1>Cadastrar estudante</h1>
         <p className="text-sm text-texto-suave">

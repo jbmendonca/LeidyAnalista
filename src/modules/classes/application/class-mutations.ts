@@ -55,7 +55,7 @@ export async function criarTurma(
       })
 
       await registrarAuditoria(tx, {
-        action: 'SETTINGS_CHANGE',
+        action: 'CLASS_CREATE',
         userId: autor.userId,
         entityType: ENTIDADE,
         entityId: turma.id,
@@ -114,7 +114,7 @@ export async function atualizarTurma(
       })
 
       await registrarAuditoria(tx, {
-        action: 'SETTINGS_CHANGE',
+        action: 'CLASS_UPDATE',
         userId: autor.userId,
         entityType: ENTIDADE,
         entityId: turma.id,

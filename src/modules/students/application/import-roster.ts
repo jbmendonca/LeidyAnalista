@@ -1,6 +1,10 @@
 import { prisma } from '@/server/prisma'
 import { AppError } from '@/server/http-errors'
-import { assertSchoolInScope, escopoVazio, type AuthContext } from '@/server/authorization'
+import {
+  assertSchoolInScope,
+  escopoVazio,
+  type AuthContext,
+} from '@/server/authorization'
 import { logger } from '@/server/logger'
 import { registrarAuditoria } from '@/modules/audit/infra/audit-repository'
 import { lerArquivo } from '@/modules/imports/infra/table-reader'
@@ -223,7 +227,8 @@ export async function importarNominata(
           coluna: 'Escola',
           codigo: 'ESCOLA_DIVERGENTE',
           severidade: 'ERROR',
-          mensagem: 'A escola da linha é diferente da escola selecionada para a importação.',
+          mensagem:
+            'A escola da linha é diferente da escola selecionada para a importação.',
         })
         return
       }
@@ -408,7 +413,9 @@ export async function importarNominata(
       let total = 0
 
       for (const [posicao, registro] of aCriar.entries()) {
-        const classId = idPorChave.get(chaveTurma(registro.schoolId, registro.codigoTurma))
+        const classId = idPorChave.get(
+          chaveTurma(registro.schoolId, registro.codigoTurma),
+        )
         const uniqueCode = codigos[posicao]
 
         /* c8 ignore next */
