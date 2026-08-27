@@ -113,7 +113,21 @@ async function main() {
   console.log(`  ${HABILIDADES.length} habilidades`)
 
   console.log('Criando o usuário administrador...')
-  const senha = process.env.SEED_ADMIN_PASSWORD ?? 'admin-local-2026'
+
+  // A senha padrão existe para o primeiro `npm run db:seed` numa máquina de
+  // desenvolvimento. Como este repositório é público, ela é uma credencial
+  // CONHECIDA — e por isso o seed se recusa a usá-la fora de desenvolvimento.
+  // Sem essa recusa, bastaria alguém implantar o sistema sem ler o README para
+  // ficar com um administrador de senha pública sobre dados de crianças.
+  const senhaInformada = process.env.SEED_ADMIN_PASSWORD
+  if (!senhaInformada && process.env.NODE_ENV === 'production') {
+    throw new Error(
+      'SEED_ADMIN_PASSWORD é obrigatória fora de desenvolvimento.\n' +
+        'A senha padrão do seed é pública — este repositório é aberto.\n' +
+        'Defina uma senha própria antes de semear.',
+    )
+  }
+  const senha = senhaInformada ?? 'admin-local-2026'
   const admin = await prisma.user.upsert({
     where: { email: 'admin@painel.local' },
     update: {},
