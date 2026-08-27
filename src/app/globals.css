@@ -1,0 +1,248 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   Painel de Análise de Leitura — fundação visual
+   --------------------------------------------------------------------------
+   Tema claro único. Contraste verificado contra WCAG 2.1 AA: 4,5:1 para texto
+   normal e 3:1 para texto grande, bordas de controle e elementos gráficos.
+
+   Cor nunca é o único portador de significado (WCAG 1.4.1): as escalas de
+   nível e de faixa aparecem sempre acompanhadas de rótulo textual, e ainda
+   assim divergem em forma (retângulo sólido × pílula tracejada com marcador).
+   ========================================================================== */
+
+@layer base {
+  :root {
+    --fonte-sistema:
+      system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+      'Noto Sans', sans-serif;
+    --fonte-mono:
+      ui-monospace, SFMono-Regular, 'Cascadia Mono', Menlo, Consolas, monospace;
+
+    /* --- Neutros ------------------------------------------------------- */
+    --cor-fundo: 247 248 250;
+    --cor-superficie: 255 255 255;
+    --cor-superficie-tenue: 244 245 247;
+    --cor-texto: 22 24 29; /* 16,5:1 sobre superfície */
+    --cor-texto-suave: 84 91 102; /* 6,8:1 sobre superfície */
+    --cor-borda: 216 219 224; /* divisor decorativo */
+    --cor-borda-forte: 118 124 135; /* 4,2:1 — borda de controle */
+    --cor-foco: 11 59 114;
+
+    /* --- Ação ---------------------------------------------------------- */
+    --cor-primaria: 27 78 143; /* branco sobre ela: 8,2:1 */
+    --cor-primaria-forte: 22 63 115;
+    --cor-primaria-tenue: 231 239 249;
+    --cor-primaria-contraste: 255 255 255;
+
+    /* --- Estados de mensagem ------------------------------------------- */
+    --cor-perigo: 164 38 44; /* branco sobre ela: 7,4:1 */
+    --cor-perigo-tenue: 253 236 236;
+    --cor-perigo-contraste: 255 255 255;
+    --cor-sucesso: 20 102 61;
+    --cor-sucesso-tenue: 230 244 236;
+    --cor-aviso: 138 90 0;
+    --cor-aviso-tenue: 255 244 224;
+    --cor-info: 11 79 108;
+    --cor-info-tenue: 227 241 247;
+
+    /* --- Escala 1: níveis oficiais da fonte (intocáveis) ---------------
+       Verde / âmbar / vermelho, preenchimento sólido, canto reto.
+       Correspondem a `LearningLevel` e NÃO devem ser reutilizados para
+       qualquer categoria produzida pelo sistema. */
+    --cor-nivel-adequado: 15 81 50;
+    --cor-nivel-adequado-fundo: 209 231 221;
+    --cor-nivel-adequado-borda: 25 135 84;
+    --cor-nivel-intermediario: 102 77 3;
+    --cor-nivel-intermediario-fundo: 255 243 205;
+    --cor-nivel-intermediario-borda: 138 101 0;
+    --cor-nivel-defasagem: 132 32 41;
+    --cor-nivel-defasagem-fundo: 248 215 218;
+    --cor-nivel-defasagem-borda: 176 42 55;
+    --cor-nivel-ausente: 63 71 80;
+    --cor-nivel-ausente-fundo: 237 238 241;
+    --cor-nivel-ausente-borda: 118 124 135;
+
+    /* --- Escala 2: faixas analíticas do sistema ------------------------
+       Petróleo / laranja-queimado / vinho, pílula tracejada com marcador ◆.
+       Matiz, forma e textura de borda diferem da escala oficial de propósito. */
+    --cor-faixa-satisfatorio: 11 79 108;
+    --cor-faixa-satisfatorio-fundo: 220 238 246;
+    --cor-faixa-satisfatorio-borda: 11 95 128;
+    --cor-faixa-atencao: 122 65 0;
+    --cor-faixa-atencao-fundo: 253 235 214;
+    --cor-faixa-atencao-borda: 168 91 0;
+    --cor-faixa-fragilidade: 106 27 77;
+    --cor-faixa-fragilidade-fundo: 249 220 236;
+    --cor-faixa-fragilidade-borda: 142 36 101;
+  }
+
+  * {
+    @apply border-borda;
+  }
+
+  html {
+    /* Nenhuma página rola na horizontal: tabela larga rola no próprio contêiner. */
+    @apply overflow-x-hidden;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply min-h-screen overflow-x-hidden bg-fundo font-sans text-[15px] leading-relaxed text-texto antialiased;
+    text-rendering: optimizeLegibility;
+    font-variant-numeric: tabular-nums;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-semibold leading-tight tracking-tight text-texto;
+    text-wrap: balance;
+  }
+
+  h1 {
+    @apply text-2xl sm:text-[1.75rem];
+  }
+  h2 {
+    @apply text-xl;
+  }
+  h3 {
+    @apply text-lg;
+  }
+
+  /* Foco sempre visível e sempre com 3:1 contra o entorno (WCAG 2.4.7). */
+  :focus-visible {
+    @apply outline-none ring-2 ring-foco ring-offset-2 ring-offset-superficie;
+  }
+
+  /* Alvos de toque confortáveis no smartphone sem inflar o desktop. */
+  @media (pointer: coarse) {
+    button,
+    [role='button'],
+    a,
+    select,
+    summary {
+      min-height: 2.75rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Conteúdo lido apenas por leitor de tela — o par textual de toda cor. */
+  .apenas-leitor-de-tela {
+    @apply absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+  }
+
+  .apenas-leitor-de-tela\:focavel:focus,
+  .apenas-leitor-de-tela\:focavel:active {
+    @apply static m-0 h-auto w-auto overflow-visible whitespace-normal;
+    clip: auto;
+    clip-path: none;
+  }
+
+  /* Contêiner de rolagem horizontal de tabela larga (regra 4). */
+  .rolagem-tabela {
+    @apply w-full max-w-full overflow-x-auto overscroll-x-contain;
+    scrollbar-gutter: stable;
+  }
+
+  /* Travessão de ausência: nunca zero, nunca vazio (regra 5). */
+  .ausente {
+    @apply select-none text-texto-suave;
+  }
+}
+
+/* ==========================================================================
+   Impressão — o relatório sai da tela para a reunião pedagógica em papel.
+   Cromatismo é preservado (`print-color-adjust: exact`) porque os badges
+   perderiam legibilidade sem o fundo; mas, como o rótulo textual está sempre
+   presente, a impressão em preto e branco continua compreensível.
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm 12mm;
+  }
+
+  :root {
+    --cor-fundo: 255 255 255;
+  }
+
+  html,
+  body {
+    @apply overflow-visible bg-white text-[11pt] text-black;
+  }
+
+  .nao-imprimir,
+  nav[aria-label='Navegação principal'],
+  [data-impressao='ocultar'] {
+    display: none !important;
+  }
+
+  .somente-impressao,
+  [data-impressao='exibir'] {
+    display: block !important;
+  }
+
+  /* Na folha não existe rolagem: a tabela precisa aparecer inteira. */
+  .rolagem-tabela {
+    overflow: visible !important;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr,
+  img,
+  figure {
+    break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  [data-cartao],
+  [data-indicador] {
+    break-inside: avoid;
+    box-shadow: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* O destino de um link impresso é invisível sem isto. */
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 9pt;
+    word-break: break-all;
+  }
+}
+
+.somente-impressao {
+  display: none;
+}

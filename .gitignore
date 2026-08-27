@@ -1,0 +1,48 @@
+# dependências
+node_modules/
+.pnp
+.pnp.js
+
+# build
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# testes
+coverage/
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+
+# ambiente
+.env
+.env.local
+.env.*.local
+
+# armazenamento de importações — CONTÉM DADOS NOMINAIS DE ESTUDANTES
+# Nunca versionar: ver research.md R-006 e R-012
+storage/
+uploads/
+
+# arquivo de referência real — CONTÉM NOME DE 111 CRIANÇAS
+# A fixture versionada é a anonimizada em tests/fixtures/
+HABILIDADES_DESEMPENHO_ESTUDANTE*.csv
+
+# sistema
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+*.tmp
+*.swp
+
+# editores
+.vscode/
+.idea/
+
+# agente
+.claude/settings.local.json

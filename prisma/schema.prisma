@@ -1,0 +1,476 @@
+// Painel de Análise de Leitura — II Ciclo CNCA
+//
+// REGRA QUE GOVERNA ESTE ARQUIVO (Constituição, Princípios I e II):
+//   - `acertos` e `itensPossiveis` são Int  — inteiros são a fonte de verdade
+//   - `percentual` é Decimal(7,4)           — derivado, exato, nunca somado
+//   - ausência de resultado é NULL          — jamais 0
+//   - NÃO EXISTE UM ÚNICO Float NESTE ARQUIVO, e não pode passar a existir
+//
+// Ver: specs/001-painel-analise-leitura/data-model.md
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum Role {
+  ADMIN
+  ANALISTA
+  ESCOLA
+}
+
+enum ImportStatus {
+  UPLOADED
+  VALIDATING
+  READY
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum IssueSeverity {
+  ERROR
+  WARNING
+}
+
+/// Normalização para consulta. NUNCA substitui `nivelOriginal` (Const. III).
+enum LearningLevel {
+  ADEQUADO
+  INTERMEDIARIO
+  DEFASAGEM
+}
+
+/// Categoria analítica do sistema. Distinta e independente de LearningLevel.
+enum AnalyticalBand {
+  FRAGILIDADE
+  ATENCAO
+  SATISFATORIO
+}
+
+enum AuditAction {
+  IMPORT_CONFIRM
+  IMPORT_DELETE
+  IMPORT_FILE_PURGE
+  SETTINGS_CHANGE
+  REPROCESS
+  STUDENT_CREATE
+  STUDENT_UPDATE
+  STUDENT_LINK
+  STUDENT_UNLINK
+  USER_CREATE
+  USER_UPDATE
+  USER_NOMINAL_PERMISSION_CHANGE
+  REPORT_EXPORT
+  ENTITY_FORCE_DELETE
+}
+
+enum ResolutionKind {
+  CODE
+  ASSISTED
+  NEW
+  UNRESOLVED
+}
+
+// ---------------------------------------------------------------------------
+// Identidade e acesso
+// ---------------------------------------------------------------------------
+
+model User {
+  id           String @id @default(cuid())
+  email        String @unique
+  passwordHash String
+  name         String
+  role         Role
+
+  /// FR-007 — permissão específica de dados nominais, ortogonal ao perfil e ao
+  /// escopo de escola. Sem ela o usuário recebe a versão agregada (FR-007a),
+  /// nunca uma negação.
+  canAccessNominalData Boolean @default(false)
+
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessions  Session[]
+  schools   UserSchool[]
+  imports   Import[]
+  auditLogs AuditLog[]
+  settings  AnalyticalSettings[]
+
+  @@map("user")
+}
+
+model Session {
+  id         String   @id
+  userId     String
+  expiresAt  DateTime
+  lastSeenAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("session")
+}
+
+/// Única fonte de autorização por escola (Const. IV, R-003).
+model UserSchool {
+  userId   String
+  schoolId String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@id([userId, schoolId])
+  @@index([schoolId])
+  @@map("user_school")
+}
+
+// ---------------------------------------------------------------------------
+// Cadastros de referência
+// ---------------------------------------------------------------------------
+
+model School {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  name      String
+  rede      String
+  municipio String
+  estado    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users    UserSchool[]
+  classes  Class[]
+  students Student[]
+  results  AssessmentStudentResult[]
+  imports  Import[]
+
+  @@map("school")
+}
+
+model Assessment {
+  id                   String    @id @default(cuid())
+  nome                 String
+  ano                  Int
+  ciclo                String
+  componenteCurricular String
+  dataAplicacao        DateTime?
+  status               String    @default("ATIVA")
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  skills  AssessmentSkill[]
+  results AssessmentStudentResult[]
+  imports Import[]
+
+  @@map("assessment")
+}
+
+model Class {
+  id     String @id @default(cuid())
+  schoolId String
+  /// Código da Turma normalizado — apenas espaços das extremidades removidos (FR-033)
+  externalCode String
+  name         String
+  anoEscolar   String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  school   School                    @relation(fields: [schoolId], references: [id])
+  students Student[]
+  results  AssessmentStudentResult[]
+
+  @@unique([schoolId, externalCode])
+  @@map("class")
+}
+
+model Skill {
+  id            String @id @default(cuid())
+  /// Código curto, ex. "H07"
+  shortCode String @unique
+  /// Código pedagógico de referência, ex. "4EF14_P"
+  referenceCode String
+  descricao     String
+  ordem         Int
+
+  assessments AssessmentSkill[]
+  results     StudentSkillResult[]
+
+  @@map("skill")
+}
+
+/// Vincula habilidade à avaliação e abriga o denominador de referência.
+/// `referenceItems` NASCE SEMPRE DA APURAÇÃO SOBRE OS DADOS IMPORTADOS.
+/// Nenhuma quantidade de itens é constante no código (FR-015, FR-016).
+model AssessmentSkill {
+  assessmentId String
+  skillId      String
+
+  referenceItems         Int
+  referenceItemsTiebreak Boolean  @default(false)
+  recalculatedAt         DateTime @default(now())
+
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  skill      Skill      @relation(fields: [skillId], references: [id])
+
+  @@id([assessmentId, skillId])
+  @@map("assessment_skill")
+}
+
+// ---------------------------------------------------------------------------
+// Estudante
+// ---------------------------------------------------------------------------
+
+model Student {
+  id String @id @default(cuid())
+
+  /// Código único, estável e permanente (FR-128 a FR-131).
+  /// Aleatório, não derivado de nome, turma ou sequência previsível.
+  uniqueCode String @unique
+
+  schoolId String
+  classId  String
+
+  /// Preservado para exibição (FR-034)
+  nomeOriginal String
+  /// Busca, detecção de duplicidade e sugestão na vinculação assistida (FR-034)
+  nomeNormalizado String
+  /// Identificador oficial da rede, quando houver (FR-135)
+  codigoExterno String?
+
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  school  School                    @relation(fields: [schoolId], references: [id])
+  class   Class                     @relation(fields: [classId], references: [id])
+  results AssessmentStudentResult[]
+
+  // SEM @@unique em (classId, nomeNormalizado): FR-175 permite homônimos
+  // cadastrados na mesma turma por decisão explícita do usuário. A colisão de
+  // FR-147/FR-148 é regra de importação, verificada na aplicação.
+  @@index([schoolId, classId])
+  @@index([schoolId, nomeNormalizado])
+  @@map("student")
+}
+
+// ---------------------------------------------------------------------------
+// Resultados
+// ---------------------------------------------------------------------------
+
+model AssessmentStudentResult {
+  id           String @id @default(cuid())
+  assessmentId String
+  schoolId     String
+  classId      String
+  studentId    String
+  importId     String
+
+  /// Filtro OBRIGATÓRIO de todo cálculo de desempenho (FR-059).
+  /// Sua ausência numa consulta de desempenho é defeito bloqueante em revisão.
+  avaliado Boolean
+
+  /// Valor bruto da fonte, preservado sem qualquer alteração (Const. III)
+  nivelOriginal String
+  /// Normalização para consulta; NULL quando não avaliado ou fora do esperado
+  nivelNormalizado LearningLevel?
+
+  /// NULL quando não avaliado — NUNCA 0 (Const. I, FR-031)
+  acertosTotais   Int?
+  itensTotais     Int?
+  percentualGeral Decimal? @db.Decimal(7, 4)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  assessment   Assessment           @relation(fields: [assessmentId], references: [id])
+  school       School               @relation(fields: [schoolId], references: [id])
+  class        Class                @relation(fields: [classId], references: [id])
+  student      Student              @relation(fields: [studentId], references: [id])
+  import       Import               @relation(fields: [importId], references: [id])
+  skillResults StudentSkillResult[]
+
+  @@unique([assessmentId, studentId])
+  @@index([assessmentId, schoolId, classId])
+  @@index([assessmentId, avaliado])
+  @@index([assessmentId, nivelNormalizado])
+  @@index([importId])
+  @@map("assessment_student_result")
+}
+
+model StudentSkillResult {
+  id       String @id @default(cuid())
+  resultId String
+  skillId  String
+
+  /// Exatamente como recebido, ex. "2 / 3". NULL se ausente (Const. I, FR-030)
+  valorOriginal String?
+  /// NULL se ausente — NUNCA 0 (Const. I, FR-031)
+  acertos        Int?
+  itensPossiveis Int?
+  percentual     Decimal? @db.Decimal(7, 4)
+
+  result AssessmentStudentResult @relation(fields: [resultId], references: [id], onDelete: Cascade)
+  skill  Skill                   @relation(fields: [skillId], references: [id])
+
+  @@unique([resultId, skillId])
+  @@index([skillId])
+  @@map("student_skill_result")
+}
+
+// ---------------------------------------------------------------------------
+// Importação
+// ---------------------------------------------------------------------------
+
+model Import {
+  id           String @id @default(cuid())
+  assessmentId String
+  schoolId     String
+
+  fileName String
+  /// SHA-256 do conteúdo — detecta reimportação acidental e prova o que foi
+  /// importado mesmo depois de o arquivo ser expurgado (FR-038b)
+  fileHash String
+  fileSize Int
+  /// NULL após a exclusão do arquivo pelo prazo de retenção (FR-038a)
+  storagePath String?
+  /// Prazo de retenção do arquivo original (FR-038a)
+  fileRetainedUntil DateTime
+  /// Quando o arquivo foi excluído; hash e metadados permanecem (FR-038b)
+  filePurgedAt DateTime?
+
+  status ImportStatus @default(UPLOADED)
+  userId String
+
+  totalRows        Int @default(0)
+  evaluatedRows    Int @default(0)
+  notEvaluatedRows Int @default(0)
+  classCount       Int @default(0)
+  skillCount       Int @default(0)
+  errorCount       Int @default(0)
+  warningCount     Int @default(0)
+
+  createdAt   DateTime  @default(now())
+  confirmedAt DateTime?
+  failedAt    DateTime?
+  failureReason String?
+
+  assessment Assessment                @relation(fields: [assessmentId], references: [id])
+  school     School                    @relation(fields: [schoolId], references: [id])
+  user       User                      @relation(fields: [userId], references: [id])
+  rows       ImportRow[]
+  issues     ImportIssue[]
+  results    AssessmentStudentResult[]
+
+  @@index([assessmentId, schoolId, fileHash])
+  @@index([assessmentId, schoolId])
+  @@index([status])
+  @@map("import")
+}
+
+/// Área de estágio. NÃO é resultado de avaliação: guarda o que o sistema
+/// entendeu do arquivo antes da confirmação (FR-051, R-007).
+model ImportRow {
+  id        String @id @default(cuid())
+  importId  String
+  /// Linha no arquivo de origem, base 1, para diagnóstico (FR-149)
+  rowNumber Int
+
+  rawData    Json
+  parsedData Json
+
+  resolvedStudentId String?
+  resolutionKind    ResolutionKind @default(UNRESOLVED)
+  blocked           Boolean        @default(false)
+
+  import Import @relation(fields: [importId], references: [id], onDelete: Cascade)
+
+  @@unique([importId, rowNumber])
+  @@index([importId, blocked])
+  @@map("import_row")
+}
+
+model ImportIssue {
+  id       String @id @default(cuid())
+  importId String
+
+  rowNumber     Int?
+  column        String?
+  code          String
+  severity      IssueSeverity
+  message       String
+  originalValue String?
+
+  createdAt DateTime @default(now())
+
+  import Import @relation(fields: [importId], references: [id], onDelete: Cascade)
+
+  @@index([importId, severity])
+  @@index([importId, code])
+  @@map("import_issue")
+}
+
+// ---------------------------------------------------------------------------
+// Configuração e auditoria
+// ---------------------------------------------------------------------------
+
+/// Configuração global e versionada (FR-162 a FR-167).
+/// NUNCA sofre UPDATE: cada alteração insere uma nova versão.
+model AnalyticalSettings {
+  id      String @id @default(cuid())
+  version Int    @unique
+
+  /// Limite superior EXCLUSIVO da faixa Fragilidade. Padrão 60.
+  fragilidadeMax Decimal @db.Decimal(5, 2)
+  /// Limite superior EXCLUSIVO da faixa Atenção. Padrão 80.
+  atencaoMax Decimal @db.Decimal(5, 2)
+
+  baixoRendimento           LearningLevel[]
+  abaixoDoAdequadoHabilitado Boolean       @default(false)
+
+  effectiveFrom   DateTime @default(now())
+  createdByUserId String
+
+  createdBy User @relation(fields: [createdByUserId], references: [id])
+
+  @@index([effectiveFrom])
+  @@map("analytical_settings")
+}
+
+/// Referencia SEMPRE por identificador. NÃO possui campo de nome (Const. IV,
+/// FR-009). Não é editável pela aplicação (FR-120).
+model AuditLog {
+  id     String      @id @default(cuid())
+  action AuditAction
+  userId String
+
+  occurredAt DateTime @default(now())
+
+  entityType String
+  entityId   String
+
+  schoolId     String?
+  assessmentId String?
+
+  beforeValue Json?
+  afterValue  Json?
+  metadata    Json?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([occurredAt])
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@index([schoolId])
+  @@map("audit_log")
+}

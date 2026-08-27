@@ -1,0 +1,24 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: painel-leitura-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: painel
+      POSTGRES_PASSWORD: painel_local_dev
+      POSTGRES_DB: painel_leitura
+      # pt-BR e UTF-8: os dados chegam com acentuação e precisam sobreviver intactos
+      POSTGRES_INITDB_ARGS: '--encoding=UTF8 --locale=C'
+    ports:
+      - '5432:5432'
+    volumes:
+      - painel_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U painel -d painel_leitura']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  painel_db_data:
+    name: painel_leitura_db_data
