@@ -52,10 +52,7 @@ function pagina(valor: string | null): number {
 }
 
 /** Preserva os filtros ao trocar de página. */
-function comPagina(
-  base: Record<string, string | null>,
-  numeroDaPagina: number,
-): string {
+function comPagina(base: Record<string, string | null>, numeroDaPagina: number): string {
   const consulta = new URLSearchParams()
   for (const [chave, valor] of Object.entries(base)) {
     if (valor) consulta.set(chave, valor)
@@ -126,8 +123,9 @@ export default async function PaginaAuditoria({
       </header>
 
       <Alert variante="informativo" titulo="Trilha somente leitura">
-        Registros de auditoria não podem ser alterados nem removidos pela interface. Desativar
-        um usuário não apaga o que ele registrou: a autoria dos fatos passados permanece.
+        Registros de auditoria não podem ser alterados nem removidos pela interface.
+        Desativar um usuário não apaga o que ele registrou: a autoria dos fatos passados
+        permanece.
       </Alert>
 
       <form method="get" className="flex flex-wrap items-end gap-3">

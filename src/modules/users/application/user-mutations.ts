@@ -98,7 +98,11 @@ export async function criarUsuario(
           canAccessNominalData,
           active: true,
           ...(schoolIds.length > 0
-            ? { schools: { createMany: { data: schoolIds.map((schoolId) => ({ schoolId })) } } }
+            ? {
+                schools: {
+                  createMany: { data: schoolIds.map((schoolId) => ({ schoolId })) },
+                },
+              }
             : {}),
         },
         select: { id: true },

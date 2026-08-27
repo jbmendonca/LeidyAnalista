@@ -72,8 +72,8 @@ export default async function PaginaHistoricoDeCriterios() {
           Histórico de critérios analíticos
         </h1>
         <p className="max-w-prose text-sm text-texto-suave">
-          Cada alteração registra uma versão nova; nenhuma versão é sobrescrita. O período de
-          vigência de uma versão termina quando a seguinte começa.
+          Cada alteração registra uma versão nova; nenhuma versão é sobrescrita. O período
+          de vigência de uma versão termina quando a seguinte começa.
         </p>
       </header>
 
@@ -82,8 +82,8 @@ export default async function PaginaHistoricoDeCriterios() {
           titulo="Nenhuma versão registrada"
           orientacao={
             <>
-              As faixas analíticas ainda não foram configuradas. Registre a primeira versão
-              em <strong>Critérios analíticos</strong>.
+              As faixas analíticas ainda não foram configuradas. Registre a primeira
+              versão em <strong>Critérios analíticos</strong>.
             </>
           }
         />

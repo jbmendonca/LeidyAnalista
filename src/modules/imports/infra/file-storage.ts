@@ -37,8 +37,13 @@ export async function guardarArquivo(
   const extensao = ponto >= 0 ? nomeOriginal.slice(ponto).toLowerCase() : ''
   const caminho = caminhoDe(hash, extensao)
 
-  await mkdir(dirname(caminho), { recursive: true })
-  await writeFile(caminho, buffer)
+  // 0o700 no diretório e 0o600 no arquivo: só o processo que serve a aplicação
+  // lê o que está aqui. O conteúdo é nome de criança — o padrão do sistema de
+  // arquivos, legível por qualquer conta local, seria permissivo demais.
+  // Em Windows o modo é ignorado pelo runtime; ali a proteção é a ACL do
+  // diretório, documentada no README.
+  await mkdir(dirname(caminho), { recursive: true, mode: 0o700 })
+  await writeFile(caminho, buffer, { mode: 0o600 })
 
   return { hash, caminho }
 }

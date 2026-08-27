@@ -1,11 +1,7 @@
 import { Prisma } from '@prisma/client'
 
 import { prisma } from '@/server/prisma'
-import {
-  requireRole,
-  schoolScopeFilter,
-  type AuthContext,
-} from '@/server/authorization'
+import { requireRole, schoolScopeFilter, type AuthContext } from '@/server/authorization'
 import { naoEncontrado } from '@/server/http-errors'
 import { registrarAuditoria } from '@/modules/audit/infra/audit-repository'
 import { toPercent } from '@/lib/decimal'

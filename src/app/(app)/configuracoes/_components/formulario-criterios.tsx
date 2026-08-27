@@ -85,8 +85,8 @@ export function FormularioCriterios({ acao, valores }: PropsFormularioCriterios)
         </legend>
         <p className="max-w-prose text-sm text-texto-suave">
           Os dois valores são <strong>limites superiores exclusivos</strong>, em pontos
-          percentuais. Com 60 e 80: abaixo de 60% é Fragilidade, de 60% a 79,99% é Atenção,
-          e 80% ou mais é Satisfatório.
+          percentuais. Com 60 e 80: abaixo de 60% é Fragilidade, de 60% a 79,99% é
+          Atenção, e 80% ou mais é Satisfatório.
         </p>
 
         <div className="grid gap-4 sm:grid-cols-2">
@@ -104,7 +104,9 @@ export function FormularioCriterios({ acao, valores }: PropsFormularioCriterios)
               placeholder="60"
               invalido={Boolean(erroFragilidade)}
               descritoPor={
-                erroFragilidade ? 'fragilidadeMax-erro fragilidadeMax-ajuda' : 'fragilidadeMax-ajuda'
+                erroFragilidade
+                  ? 'fragilidadeMax-erro fragilidadeMax-ajuda'
+                  : 'fragilidadeMax-ajuda'
               }
             />
             <p id="fragilidadeMax-ajuda" className="text-rotulo text-texto-suave">
@@ -126,7 +128,9 @@ export function FormularioCriterios({ acao, valores }: PropsFormularioCriterios)
               maxLength={6}
               placeholder="80"
               invalido={Boolean(erroAtencao)}
-              descritoPor={erroAtencao ? 'atencaoMax-erro atencaoMax-ajuda' : 'atencaoMax-ajuda'}
+              descritoPor={
+                erroAtencao ? 'atencaoMax-erro atencaoMax-ajuda' : 'atencaoMax-ajuda'
+              }
             />
             <p id="atencaoMax-ajuda" className="text-rotulo text-texto-suave">
               A partir deste percentual o resultado é Satisfatório.
@@ -189,9 +193,12 @@ export function FormularioCriterios({ acao, valores }: PropsFormularioCriterios)
           />
           <span>
             Exibir o agrupamento opcional &ldquo;Abaixo do adequado&rdquo;
-            <span id="abaixoDoAdequado-ajuda" className="block text-rotulo text-texto-suave">
-              Agrupamento complementar de leitura. É apresentado ao lado dos níveis da fonte,
-              nunca no lugar deles.
+            <span
+              id="abaixoDoAdequado-ajuda"
+              className="block text-rotulo text-texto-suave"
+            >
+              Agrupamento complementar de leitura. É apresentado ao lado dos níveis da
+              fonte, nunca no lugar deles.
             </span>
           </span>
         </label>
@@ -204,8 +211,8 @@ export function FormularioCriterios({ acao, valores }: PropsFormularioCriterios)
       </div>
 
       <p className="max-w-prose text-rotulo text-texto-suave">
-        Gravar cria uma <strong>nova versão</strong>. A versão atual não é sobrescrita: ela
-        continua no histórico, com autor e período de vigência.
+        Gravar cria uma <strong>nova versão</strong>. A versão atual não é sobrescrita:
+        ela continua no histórico, com autor e período de vigência.
       </p>
     </form>
   )

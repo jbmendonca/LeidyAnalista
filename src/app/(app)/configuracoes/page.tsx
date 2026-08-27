@@ -52,8 +52,8 @@ export default async function PaginaConfiguracoes() {
           <h1 className="text-xl font-semibold text-texto">Critérios analíticos</h1>
           <p className="max-w-prose text-sm text-texto-suave">
             Configuração única para todo o sistema. Não existe critério por escola nem por
-            avaliação: dois resultados classificados como &ldquo;Fragilidade&rdquo; precisam
-            significar a mesma coisa em qualquer tela.
+            avaliação: dois resultados classificados como &ldquo;Fragilidade&rdquo;
+            precisam significar a mesma coisa em qualquer tela.
           </p>
         </div>
 
@@ -84,8 +84,8 @@ export default async function PaginaConfiguracoes() {
                 Nível de aprendizagem — da fonte
               </p>
               <p className="text-sm text-texto-suave">
-                Transcrito da planilha original, sem alteração. O sistema não o infere, não o
-                recalcula e não o reordena. Nada nesta página muda esse campo.
+                Transcrito da planilha original, sem alteração. O sistema não o infere,
+                não o recalcula e não o reordena. Nada nesta página muda esse campo.
               </p>
               <div className="flex flex-wrap gap-1.5">
                 <NivelBadge nivel="ADEQUADO" avaliado />
@@ -99,8 +99,8 @@ export default async function PaginaConfiguracoes() {
                 Faixa analítica — critério do sistema
               </p>
               <p className="text-sm text-texto-suave">
-                Calculada pelo painel a partir de acertos e itens, com os limites definidos
-                abaixo. É o que esta página configura.
+                Calculada pelo painel a partir de acertos e itens, com os limites
+                definidos abaixo. É o que esta página configura.
               </p>
               <div className="flex flex-wrap gap-1.5">
                 <FaixaBadge faixa="FRAGILIDADE" />
@@ -114,9 +114,10 @@ export default async function PaginaConfiguracoes() {
 
       {vigente === null ? (
         <Alert variante="aviso" titulo="Nenhuma versão de critérios cadastrada">
-          As faixas não possuem valor padrão em código, de propósito: um limite configurável
-          escondido em constante deixaria de ser configurável. Grave a primeira versão abaixo
-          para que as telas analíticas voltem a classificar resultados.
+          As faixas não possuem valor padrão em código, de propósito: um limite
+          configurável escondido em constante deixaria de ser configurável. Grave a
+          primeira versão abaixo para que as telas analíticas voltem a classificar
+          resultados.
         </Alert>
       ) : (
         <Card>
@@ -191,13 +192,13 @@ export default async function PaginaConfiguracoes() {
         <ul className="list-disc space-y-1 pl-5">
           <li>
             As telas analíticas passam a classificar com os limites novos na consulta
-            seguinte. Não há reprocessamento a executar: a faixa é calculada na leitura e não
-            existe coluna de faixa em lugar nenhum do banco.
+            seguinte. Não há reprocessamento a executar: a faixa é calculada na leitura e
+            não existe coluna de faixa em lugar nenhum do banco.
           </li>
           <li>
-            Nenhum valor importado é alterado — acertos, itens possíveis, valor original da
-            célula e o <strong>Nível de aprendizagem</strong> da fonte permanecem exatamente
-            como foram recebidos.
+            Nenhum valor importado é alterado — acertos, itens possíveis, valor original
+            da célula e o <strong>Nível de aprendizagem</strong> da fonte permanecem
+            exatamente como foram recebidos.
           </li>
           <li>
             A versão anterior continua gravada, com autor e período de vigência, e segue

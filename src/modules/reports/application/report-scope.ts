@@ -10,6 +10,10 @@ import {
 import { entradaInvalida, naoEncontrado } from '@/server/http-errors'
 import { logger } from '@/server/logger'
 import { registrarAuditoriaAvulsa } from '@/modules/audit/infra/audit-repository'
+import { listarAvaliacoes } from '@/modules/assessments/application/list-assessment'
+import { listarEscolasParaSelecao } from '@/modules/schools/application/list-schools'
+import { listarTurmas } from '@/modules/classes/application/list-class'
+import { listarEstudantes } from '@/modules/students/application/list-students'
 import type { FiltrosAnalise } from '@/modules/analytics/infra/aggregate-queries'
 import type { RankCriterion } from '@/modules/analytics/domain/rank-skills'
 import { normalizarCriterio } from '@/modules/analytics/application/assessment-dashboard'
@@ -506,6 +510,93 @@ async function montarPorTipo(escopo: EscopoRelatorio): Promise<RelatorioMontado>
       return montarRelatorioDaHabilidade(escopo)
     case 'individual':
       return montarRelatorioIndividual(escopo)
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Opções de recorte para a tela de relatórios
+// ---------------------------------------------------------------------------
+
+export type OpcoesDeRelatorio = Readonly<{
+  avaliacoes: readonly { id: string; rotulo: string }[]
+  escolas: readonly { id: string; rotulo: string }[]
+  turmas: readonly { id: string; rotulo: string }[]
+  habilidades: readonly { id: string; rotulo: string }[]
+  estudantes: readonly { id: string; rotulo: string }[]
+  /** `false` quando os nomes da lista de estudantes vieram suprimidos (FR-007a). */
+  nominal: boolean
+}>
+
+/**
+ * Preenche os seletores da tela de relatórios, sempre dentro do escopo do requisitante.
+ *
+ * A escola alheia não aparece sequer como opção — o que é conveniência, não segurança: a
+ * defesa que vale continua sendo a do servidor, em `resolverEscopoRelatorio`. As duas são
+ * independentes de propósito.
+ *
+ * O rótulo do estudante junta código único e nome. Quando os nomes estão suprimidos, o
+ * código sozinho continua identificando a criança para quem monta o relatório, sem
+ * revelá-la (FR-131).
+ */
+export async function listarOpcoesDeRelatorio(
+  ctx: AuthContext,
+  recorte: Readonly<{
+    assessmentId?: string | null | undefined
+    schoolId?: string | null | undefined
+    classId?: string | null | undefined
+  }>,
+): Promise<OpcoesDeRelatorio> {
+  requireUser(ctx)
+
+  const [avaliacoes, escolas] = await Promise.all([
+    listarAvaliacoes(ctx),
+    listarEscolasParaSelecao(ctx),
+  ])
+
+  const schoolId = recorte.schoolId ?? null
+  const turmas = await listarTurmas(ctx, schoolId)
+
+  const habilidades = recorte.assessmentId
+    ? await prisma.assessmentSkill.findMany({
+        where: { assessmentId: recorte.assessmentId },
+        orderBy: { skill: { ordem: 'asc' } },
+        select: { skillId: true, skill: { select: { shortCode: true, descricao: true } } },
+      })
+    : []
+
+  // Sem turma escolhida a lista de estudantes ficaria com a rede inteira — inútil como
+  // seletor e cara como consulta. A ficha individual é sempre de uma turma.
+  const estudantes = recorte.classId
+    ? await listarEstudantes(ctx, {
+        schoolId,
+        classId: recorte.classId,
+        pagina: 1,
+        tamanho: 500,
+      })
+    : null
+
+  return {
+    avaliacoes: avaliacoes.map((a) => ({
+      id: a.id,
+      rotulo: `${a.nome} — ${a.ano}`,
+    })),
+    escolas: escolas.map((e) => ({
+      id: e.id,
+      rotulo: `${e.name} — ${e.municipio}/${e.estado}`,
+    })),
+    turmas: turmas.map((t) => ({
+      id: t.id,
+      rotulo: `${t.name} (${t.externalCode}) — ${t.escolaNome}`,
+    })),
+    habilidades: habilidades.map((h) => ({
+      id: h.skillId,
+      rotulo: `${h.skill.shortCode} — ${h.skill.descricao.slice(0, 70)}`,
+    })),
+    estudantes: (estudantes?.itens ?? []).map((e) => ({
+      id: e.id,
+      rotulo: `${e.uniqueCode} — ${e.nomeOriginal}`,
+    })),
+    nominal: estudantes?.nominal ?? versaoDoRelatorio(ctx).nominal,
   }
 }
 

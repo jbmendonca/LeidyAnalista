@@ -13,6 +13,7 @@ import {
   Settings,
   Target,
   Upload,
+  UserCog,
   Users,
   X,
 } from 'lucide-react'
@@ -36,6 +37,7 @@ const ITENS: readonly ItemNavegacao[] = [
   { rotulo: 'Habilidades', href: '/habilidades', Icone: Target },
   { rotulo: 'Importações', href: '/importacoes', Icone: Upload },
   { rotulo: 'Relatórios', href: '/relatorios', Icone: BarChart3 },
+  { rotulo: 'Usuários', href: '/usuarios', Icone: UserCog },
   { rotulo: 'Configurações', href: '/configuracoes', Icone: Settings },
   { rotulo: 'Auditoria', href: '/auditoria', Icone: History },
 ]

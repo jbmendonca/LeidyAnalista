@@ -58,8 +58,8 @@ export default async function PaginaUsuarios() {
         <div className="space-y-1">
           <h1 className="text-xl font-semibold text-texto">Usuários</h1>
           <p className="max-w-prose text-sm text-texto-suave">
-            Perfil, escolas vinculadas e permissão de dados nominais. O vínculo com a escola é
-            a autorização real: o usuário só enxerga o que está vinculado a ele.
+            Perfil, escolas vinculadas e permissão de dados nominais. O vínculo com a
+            escola é a autorização real: o usuário só enxerga o que está vinculado a ele.
           </p>
         </div>
 
@@ -70,8 +70,9 @@ export default async function PaginaUsuarios() {
 
       <Alert variante="informativo" titulo="Sobre a permissão de dados nominais">
         Ela é do usuário, não do perfil. Quem não a possui{' '}
-        <strong>não é bloqueado</strong>: recebe a versão agregada de toda tela, relatório e
-        exportação, sem os nomes das crianças. Cada alteração fica registrada na auditoria.
+        <strong>não é bloqueado</strong>: recebe a versão agregada de toda tela, relatório
+        e exportação, sem os nomes das crianças. Cada alteração fica registrada na
+        auditoria.
       </Alert>
 
       <TableContainer rotulo="Usuários do sistema">
@@ -151,11 +152,7 @@ export default async function PaginaUsuarios() {
                             name="conceder"
                             value={usuario.canAccessNominalData ? 'false' : 'true'}
                           />
-                          <Button
-                            type="submit"
-                            variante="secundario"
-                            tamanho="pequeno"
-                          >
+                          <Button type="submit" variante="secundario" tamanho="pequeno">
                             {usuario.canAccessNominalData ? 'Negar' : 'Conceder'}
                             <span className="apenas-leitor-de-tela">
                               {' '}
@@ -187,11 +184,7 @@ export default async function PaginaUsuarios() {
                               name="ativar"
                               value={usuario.active ? 'false' : 'true'}
                             />
-                            <Button
-                              type="submit"
-                              variante="secundario"
-                              tamanho="pequeno"
-                            >
+                            <Button type="submit" variante="secundario" tamanho="pequeno">
                               {usuario.active ? 'Desativar' : 'Reativar'}
                               <span className="apenas-leitor-de-tela">
                                 {' '}

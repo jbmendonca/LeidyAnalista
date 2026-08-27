@@ -112,7 +112,8 @@ function exigirEscolaParaPerfilEscola(
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       path: ['schoolIds'],
-      message: 'Vincule ao menos uma escola: o perfil Escola só enxerga o que está vinculado.',
+      message:
+        'Vincule ao menos uma escola: o perfil Escola só enxerga o que está vinculado.',
     })
   }
 }

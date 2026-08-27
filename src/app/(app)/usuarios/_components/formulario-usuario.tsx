@@ -135,7 +135,8 @@ export function FormularioUsuario({ acao, escolas }: PropsFormularioUsuario) {
           descritoPor={erroSenha ? 'senha-erro senha-ajuda' : 'senha-ajuda'}
         />
         <p id="senha-ajuda" className="text-rotulo text-texto-suave">
-          Ao menos 12 caracteres. Combine a senha por um canal separado do e-mail de convite.
+          Ao menos 12 caracteres. Combine a senha por um canal separado do e-mail de
+          convite.
         </p>
         <ErroDeCampo id="senha-erro" mensagem={erroSenha} />
       </div>
@@ -169,16 +170,14 @@ export function FormularioUsuario({ acao, escolas }: PropsFormularioUsuario) {
           Permissão de dados nominais
         </legend>
         <Select id="dadosNominais" name="dadosNominais" descritoPor="dadosNominais-ajuda">
-          <option value="PADRAO">
-            Padrão do perfil ({selecionado.padraoNominal})
-          </option>
+          <option value="PADRAO">Padrão do perfil ({selecionado.padraoNominal})</option>
           <option value="CONCEDER">Conceder — verá os nomes das crianças</option>
           <option value="NEGAR">Negar — verá as telas sem os nomes</option>
         </Select>
         <p id="dadosNominais-ajuda" className="max-w-prose text-rotulo text-texto-suave">
           Esta permissão é do usuário, não do perfil, e o Administrador pode alterá-la a
-          qualquer momento. Sem ela a pessoa <strong>não é bloqueada</strong>: continua vendo
-          todas as telas, listas e relatórios, apenas sem os nomes das crianças.
+          qualquer momento. Sem ela a pessoa <strong>não é bloqueada</strong>: continua
+          vendo todas as telas, listas e relatórios, apenas sem os nomes das crianças.
         </p>
       </fieldset>
 
