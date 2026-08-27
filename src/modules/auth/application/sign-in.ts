@@ -3,7 +3,6 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/server/prisma'
-import { isProduction } from '@/lib/env'
 import { credenciaisSchema } from '@/modules/auth/schemas'
 import {
   consumirTempoDeVerificacao,
@@ -16,6 +15,7 @@ import {
   revogarSessao,
 } from '@/modules/auth/infra/session-repository'
 import { logger } from '@/server/logger'
+import { cookieDeveSerSecure } from '@/server/request-protocol'
 
 export type EstadoLogin = { erro?: string }
 
@@ -78,7 +78,10 @@ export async function signIn(
 
   store.set(COOKIE_SESSAO, sessao.id, {
     httpOnly: true,
-    secure: isProduction,
+    // Derivado do protocolo REAL da requisição, não de NODE_ENV: um cookie
+    // `Secure` enviado por HTTP é descartado pelo navegador, e o login passa a
+    // falhar em silêncio.
+    secure: await cookieDeveSerSecure(),
     sameSite: 'lax',
     path: '/',
     expires: sessao.expiresAt,

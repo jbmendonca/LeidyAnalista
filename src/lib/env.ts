@@ -24,6 +24,19 @@ const envSchema = z.object({
   NODE_ENV: z
     .enum(['development', 'test', 'production'])
     .default('development'),
+
+  /**
+   * Força o atributo `Secure` no cookie de sessão.
+   *
+   * Deixe em branco para o sistema decidir pelo protocolo real da requisição.
+   * Defina `true` em produção atrás de TLS — e veja
+   * `src/server/request-protocol.ts` para o porquê de não derivar isso de
+   * `NODE_ENV`.
+   */
+  SESSION_COOKIE_SECURE: z
+    .enum(['true', 'false'])
+    .optional()
+    .transform((v) => (v === undefined ? undefined : v === 'true')),
 })
 
 export type Env = z.infer<typeof envSchema>

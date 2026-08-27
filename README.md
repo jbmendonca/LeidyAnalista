@@ -275,3 +275,24 @@ aplicadas: `npm run db:migrate`.
 
 **Acentuação errada no CSV exportado** — abra pelo assistente de importação do Excel escolhendo
 UTF-8, ou use o LibreOffice. O arquivo é gerado com BOM justamente para o Excel reconhecer.
+
+**O login "funciona" mas toda navegação volta para a tela de entrada** — quase sempre é o
+atributo `Secure` do cookie de sessão. O navegador descarta cookie `Secure` recebido por HTTP,
+com uma exceção que esconde o problema: `http://localhost` é tratado como contexto seguro, e
+por isso funciona na própria máquina e falha ao ser acessado pela rede.
+
+O sistema decide o atributo pelo protocolo real da requisição, então acessar por
+`http://192.168.0.10:3000` funciona sem configuração. Se você forçou `SESSION_COOKIE_SECURE=true`
+sem servir por HTTPS, este é o sintoma — remova a variável ou coloque TLS na frente.
+
+---
+
+## Acesso pela rede local
+
+`npm run dev` e `npm start` já escutam em todas as interfaces. Basta acessar pelo IP da
+máquina, por exemplo `http://172.17.4.96:3000`. Pode ser necessário liberar a porta 3000 no
+firewall do Windows.
+
+> **Isto é adequado a piloto em rede controlada, não a produção.** O painel trata dados
+> nominais de crianças; servi-lo por HTTP significa trafegar nome e desempenho em claro. Para
+> uso real, coloque um proxy com TLS na frente e defina `SESSION_COOKIE_SECURE="true"`.
