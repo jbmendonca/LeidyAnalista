@@ -47,14 +47,15 @@ export default async function PaginaPainelDaTurma({
 
   const cabecalho = (
     <header className="space-y-1">
-      <Link href="/turmas" className="text-rotulo text-primaria underline underline-offset-4">
+      <Link
+        href="/turmas"
+        className="text-rotulo text-primaria underline underline-offset-4"
+      >
         Voltar para turmas
       </Link>
       <h1 className="text-xl font-semibold text-texto">
         {turma.turmaNome}{' '}
-        <span className="font-normal text-texto-suave">
-          · turma {turma.codigoTurma}
-        </span>
+        <span className="font-normal text-texto-suave">· turma {turma.codigoTurma}</span>
       </h1>
       <p className="text-sm text-texto-suave">
         {turma.escolaNome} ({turma.escolaCodigo}) — {turma.municipio}/{turma.estado} ·{' '}
@@ -63,8 +64,8 @@ export default async function PaginaPainelDaTurma({
       </p>
       {conteudo ? (
         <p className="text-rotulo text-texto-suave">
-          {conteudo.avaliacao.nome} · {conteudo.avaliacao.ciclo} · {conteudo.avaliacao.ano} ·{' '}
-          {conteudo.versaoRelatorio}
+          {conteudo.avaliacao.nome} · {conteudo.avaliacao.ciclo} ·{' '}
+          {conteudo.avaliacao.ano} · {conteudo.versaoRelatorio}
         </p>
       ) : null}
     </header>
@@ -162,8 +163,8 @@ export default async function PaginaPainelDaTurma({
               ) : null}
             </dl>
             <p className="pt-1 text-rotulo text-texto-suave">
-              Os {formatarNumero(participacao.naoAvaliados)} não avaliados não entram aqui:
-              não avaliado não é Defasagem.
+              Os {formatarNumero(participacao.naoAvaliados)} não avaliados não entram
+              aqui: não avaliado não é Defasagem.
             </p>
           </Card>
         </div>

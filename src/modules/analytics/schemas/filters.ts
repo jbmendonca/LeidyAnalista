@@ -91,7 +91,10 @@ function textoOpcional(rotulo: string) {
   )
 }
 
-function enumOpcional<T extends readonly [string, ...string[]]>(valores: T, rotulo: string) {
+function enumOpcional<T extends readonly [string, ...string[]]>(
+  valores: T,
+  rotulo: string,
+) {
   return z.preprocess(
     vazioParaIndefinido,
     z
@@ -112,19 +115,22 @@ function enumOpcional<T extends readonly [string, ...string[]]>(valores: T, rotu
  * inteiros, na camada de dados).
  */
 function percentualOpcional(rotulo: string) {
-  return z.preprocess((valor) => {
-    const limpo = vazioParaIndefinido(valor)
-    if (limpo === undefined) return undefined
-    if (typeof limpo !== 'string') return limpo
-    const numero = Number(limpo.replace(',', '.'))
-    // Texto que não é número é devolvido como texto de propósito: `z.number()`
-    // o recusa com mensagem, em vez de `NaN` atravessar como se fosse valor.
-    return Number.isFinite(numero) ? numero : limpo
-  }, z
-    .number({ invalid_type_error: `${rotulo} deve ser um número entre 0 e 100.` })
-    .min(0, `${rotulo} não pode ser menor que 0.`)
-    .max(100, `${rotulo} não pode ser maior que 100.`)
-    .optional())
+  return z.preprocess(
+    (valor) => {
+      const limpo = vazioParaIndefinido(valor)
+      if (limpo === undefined) return undefined
+      if (typeof limpo !== 'string') return limpo
+      const numero = Number(limpo.replace(',', '.'))
+      // Texto que não é número é devolvido como texto de propósito: `z.number()`
+      // o recusa com mensagem, em vez de `NaN` atravessar como se fosse valor.
+      return Number.isFinite(numero) ? numero : limpo
+    },
+    z
+      .number({ invalid_type_error: `${rotulo} deve ser um número entre 0 e 100.` })
+      .min(0, `${rotulo} não pode ser menor que 0.`)
+      .max(100, `${rotulo} não pode ser maior que 100.`)
+      .optional(),
+  )
 }
 
 // ---------------------------------------------------------------------------

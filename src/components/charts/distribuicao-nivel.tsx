@@ -15,7 +15,13 @@ import {
 import { cn } from '@/lib/utils'
 import { AUSENTE, formatarNumero } from '@/lib/format'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import {
   Table,
   TableBody,
@@ -48,11 +54,7 @@ import { NivelBadge, type NivelAprendizagem } from '@/components/ui/nivel-badge'
  *    Sem esse rótulo, o número seria lido como se a planilha original tivesse essa categoria.
  */
 
-export type ChaveNivelGrafico =
-  | 'ADEQUADO'
-  | 'INTERMEDIARIO'
-  | 'DEFASAGEM'
-  | 'SEM_NIVEL'
+export type ChaveNivelGrafico = 'ADEQUADO' | 'INTERMEDIARIO' | 'DEFASAGEM' | 'SEM_NIVEL'
 
 export type LinhaDistribuicaoNivel = {
   chave: ChaveNivelGrafico
@@ -123,8 +125,8 @@ export function DistribuicaoNivel({
             {formatarNumero(totalAvaliados)} estudantes avaliados
           </strong>
           , e não sobre os {formatarNumero(totalImportado)} importados. Os{' '}
-          {formatarNumero(naoAvaliados)} não avaliados ficam fora deste quadro: não têm nível
-          e não são Defasagem.
+          {formatarNumero(naoAvaliados)} não avaliados ficam fora deste quadro: não têm
+          nível e não são Defasagem.
         </CardDescription>
         <p className="text-rotulo text-texto-suave">
           Nível informado na fonte — o sistema apenas transcreve, não classifica.
@@ -159,7 +161,11 @@ export function DistribuicaoNivel({
                     axisLine={false}
                     tick={{ fontSize: 12, fill: 'rgb(84 91 102)' }}
                   />
-                  <Bar dataKey="quantidade" isAnimationActive={false} radius={[0, 3, 3, 0]}>
+                  <Bar
+                    dataKey="quantidade"
+                    isAnimationActive={false}
+                    radius={[0, 3, 3, 0]}
+                  >
                     {dados.map((d) => (
                       <Cell
                         key={d.chave}
@@ -221,9 +227,7 @@ export function DistribuicaoNivel({
         <div className="space-y-2 rounded border border-dashed border-borda-forte bg-superficie-tenue p-3">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variante="destaque">Regra analítica do sistema</Badge>
-            <span className="text-rotulo text-texto-suave">
-              não é categoria da fonte
-            </span>
+            <span className="text-rotulo text-texto-suave">não é categoria da fonte</span>
           </div>
 
           <p className="text-sm text-texto">

@@ -145,8 +145,8 @@ export function secao(entrada: {
   titulo: string
   colunas: readonly ColunaRelatorio[]
   linhas: readonly (readonly Celula[])[]
-  descricao?: string
-  nota?: string
+  descricao?: string | null
+  nota?: string | null
 }): SecaoRelatorio {
   return {
     id: entrada.id,

@@ -142,7 +142,11 @@ export function BarraFiltros({
     (a) => !a.chaves.every((c) => fixas.has(c)),
   )
 
-  const selecao = (chave: ChaveFiltro, itens: readonly { valor: string; rotulo: string }[], vazio: string) => (
+  const selecao = (
+    chave: ChaveFiltro,
+    itens: readonly { valor: string; rotulo: string }[],
+    vazio: string,
+  ) => (
     <Select id={chave} name={chave} defaultValue={valorDe(filtros, chave)}>
       <option value="">{vazio}</option>
       {itens.map((i) => (
@@ -156,7 +160,10 @@ export function BarraFiltros({
   return (
     <section
       aria-label="Filtros do recorte"
-      className={cn('space-y-3 rounded-md border border-borda bg-superficie p-4', className)}
+      className={cn(
+        'space-y-3 rounded-md border border-borda bg-superficie p-4',
+        className,
+      )}
     >
       {erros && erros.length > 0 ? (
         <Alert variante="erro" titulo="Recorte não aplicado">
@@ -286,10 +293,17 @@ export function BarraFiltros({
             </Campo>
 
             <div className="min-w-0 space-y-1.5">
-              <span className="block text-rotulo font-medium text-texto" id="faixa-percentual">
+              <span
+                className="block text-rotulo font-medium text-texto"
+                id="faixa-percentual"
+              >
                 Faixa de percentual geral
               </span>
-              <div className="flex items-center gap-2" role="group" aria-labelledby="faixa-percentual">
+              <div
+                className="flex items-center gap-2"
+                role="group"
+                aria-labelledby="faixa-percentual"
+              >
                 <Input
                   id="percentualMin"
                   name="percentualMin"

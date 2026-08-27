@@ -110,9 +110,7 @@ describe('TabelaEstudantes — estudante não avaliado', () => {
     expect(tabelaAvaliados).not.toBeNull()
     expect(tabelaAusentes).not.toBe(tabelaAvaliados)
 
-    expect(
-      screen.getByRole('heading', { name: /Não avaliados/i }),
-    ).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /Não avaliados/i })).toBeInTheDocument()
   })
 })
 

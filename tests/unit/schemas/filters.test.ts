@@ -165,9 +165,9 @@ describe('faixa de percentual', () => {
   })
 
   it('aceita mínimo igual ao máximo — é um recorte pontual, não um erro', () => {
-    expect(filtrosSchema.safeParse({ percentualMin: '50', percentualMax: '50' }).success).toBe(
-      true,
-    )
+    expect(
+      filtrosSchema.safeParse({ percentualMin: '50', percentualMax: '50' }).success,
+    ).toBe(true)
   })
 
   it('aceita apenas um dos limites', () => {
@@ -242,7 +242,9 @@ describe('filtros ativos legíveis e removíveis — FR-100', () => {
   })
 
   it('descreve a faixa aberta em apenas um dos lados', () => {
-    expect(descreverFiltrosAtivos({ percentualMin: 60 })[0]?.valor).toBe('a partir de 60%')
+    expect(descreverFiltrosAtivos({ percentualMin: 60 })[0]?.valor).toBe(
+      'a partir de 60%',
+    )
     expect(descreverFiltrosAtivos({ percentualMax: 60 })[0]?.valor).toBe('até 60%')
   })
 

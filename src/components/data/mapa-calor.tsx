@@ -137,8 +137,9 @@ export function MapaCalor({
         <table className="w-full min-w-max caption-bottom border-collapse text-sm">
           <caption className="max-w-prose px-3 py-2 text-left text-rotulo text-texto-suave">
             Cada célula traz o resultado original e o percentual em texto; a cor indica a
-            faixa analítica do sistema e nunca é o único portador de significado. Célula sem
-            resultado é tracejada e traz travessão — distinta de célula com resultado zero.
+            faixa analítica do sistema e nunca é o único portador de significado. Célula
+            sem resultado é tracejada e traz travessão — distinta de célula com resultado
+            zero.
           </caption>
 
           <thead className="sticky top-0 z-20 border-b border-borda bg-superficie-tenue">
@@ -199,9 +200,10 @@ export function MapaCalor({
       <LegendaFaixaAnalitica />
 
       <p className="text-rotulo text-texto-suave">
-        {formatarNumero(linhas.length)} estudantes × {formatarNumero(mapa.habilidades.length)}{' '}
-        habilidades · {formatarNumero(mapa.celulasComResultado)} células com resultado.
-        Limites em vigor: Fragilidade abaixo de {fragilidadeMaxTexto}%, Atenção de{' '}
+        {formatarNumero(linhas.length)} estudantes ×{' '}
+        {formatarNumero(mapa.habilidades.length)} habilidades ·{' '}
+        {formatarNumero(mapa.celulasComResultado)} células com resultado. Limites em
+        vigor: Fragilidade abaixo de {fragilidadeMaxTexto}%, Atenção de{' '}
         {fragilidadeMaxTexto}% a menos de {atencaoMaxTexto}%, Satisfatório a partir de{' '}
         {atencaoMaxTexto}%.
         {virtualizar

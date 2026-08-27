@@ -245,7 +245,9 @@ export async function obterFichaDoEstudante(
   }
 
   const resultado = await prisma.assessmentStudentResult.findUnique({
-    where: { assessmentId_studentId: { assessmentId: avaliacao.id, studentId: estudante.id } },
+    where: {
+      assessmentId_studentId: { assessmentId: avaliacao.id, studentId: estudante.id },
+    },
     select: {
       avaliado: true,
       nivelOriginal: true,
@@ -319,7 +321,8 @@ export async function obterFichaDoEstudante(
       valorOriginal: avaliado ? (bruto?.valorOriginal ?? null) : null,
       acertos: fracao === null ? null : fracao.acertos,
       itens: fracao === null ? null : fracao.itens,
-      fracaoTexto: fracao === null ? AUSENTE : formatarFracao(fracao.acertos, fracao.itens),
+      fracaoTexto:
+        fracao === null ? AUSENTE : formatarFracao(fracao.acertos, fracao.itens),
       percentualTexto: formatPercent(toPercent(fracao)),
       faixa,
     }
@@ -327,7 +330,9 @@ export async function obterFichaDoEstudante(
 
   const derivada = calculateStudentPerformance(
     habilidades.map((h) =>
-      h.acertos === null || h.itens === null ? null : { acertos: h.acertos, itens: h.itens },
+      h.acertos === null || h.itens === null
+        ? null
+        : { acertos: h.acertos, itens: h.itens },
     ),
   )
 

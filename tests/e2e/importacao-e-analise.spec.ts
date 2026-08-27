@@ -46,8 +46,8 @@ test('importa o arquivo de referência e confirma os números na pré-visualiza�
   await entrar(page, admin)
   await page.goto('/importacoes/nova')
 
-  await page.getByLabel(/avaliação/i).selectOption({ label: /Avaliação/ })
-  await page.getByLabel(/escola/i).selectOption({ label: /EscolaFluxo/ })
+  await page.getByLabel(/avaliação/i).selectOption(avaliacaoId)
+  await page.getByLabel(/escola/i).selectOption(escolaId)
   await page.getByLabel(/arquivo/i).setInputFiles(FIXTURE)
 
   await page.getByRole('button', { name: /enviar e validar/i }).click()
@@ -130,8 +130,8 @@ test('bloqueia a reimportação do mesmo arquivo', async ({ page }) => {
   await entrar(page, admin)
   await page.goto('/importacoes/nova')
 
-  await page.getByLabel(/avaliação/i).selectOption({ label: /Avaliação/ })
-  await page.getByLabel(/escola/i).selectOption({ label: /EscolaFluxo/ })
+  await page.getByLabel(/avaliação/i).selectOption(avaliacaoId)
+  await page.getByLabel(/escola/i).selectOption(escolaId)
   await page.getByLabel(/arquivo/i).setInputFiles(FIXTURE)
   await page.getByRole('button', { name: /enviar e validar/i }).click()
 

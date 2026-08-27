@@ -93,7 +93,8 @@ function LinhaAvaliado({ estudante }: { estudante: EstudanteDaTurma }) {
         {/* O texto bruto da fonte fica visível: a etiqueta é normalização para consulta,
             e o que a rede escreveu não pode desaparecer da tela (Const. III). */}
         <span className="block text-rotulo text-texto-suave">
-          na fonte: {estudante.nivelOriginal.trim() === '' ? AUSENTE : estudante.nivelOriginal}
+          na fonte:{' '}
+          {estudante.nivelOriginal.trim() === '' ? AUSENTE : estudante.nivelOriginal}
         </span>
       </TableCell>
       <TableCell numerica>
@@ -206,7 +207,10 @@ export function TabelaEstudantes({
   return (
     <div className={cn('space-y-6', className)}>
       <section className="space-y-2" aria-labelledby="titulo-estudantes-avaliados">
-        <h3 id="titulo-estudantes-avaliados" className="text-base font-semibold text-texto">
+        <h3
+          id="titulo-estudantes-avaliados"
+          className="text-base font-semibold text-texto"
+        >
           Estudantes avaliados
         </h3>
 
@@ -219,10 +223,10 @@ export function TabelaEstudantes({
           <TableContainer rotulo="Estudantes avaliados, ordenados por prioridade pedagógica">
             <Table>
               <TableCaption>
-                Ordem padrão: Defasagem, Intermediário e Adequado; dentro de cada grupo, do
-                menor para o maior percentual geral. Percentual é{' '}
-                <strong className="font-medium text-texto">Σ acertos ÷ Σ itens</strong>, nunca
-                a média dos percentuais.
+                Ordem padrão: Defasagem, Intermediário e Adequado; dentro de cada grupo,
+                do menor para o maior percentual geral. Percentual é{' '}
+                <strong className="font-medium text-texto">Σ acertos ÷ Σ itens</strong>,
+                nunca a média dos percentuais.
               </TableCaption>
               <Cabecalho />
               <TableBody>
@@ -257,8 +261,8 @@ export function TabelaEstudantes({
                 <strong className="font-medium text-texto">
                   fora de todo denominador de desempenho
                 </strong>{' '}
-                e dentro do indicador de participação. A ausência de resultado aparece como
-                travessão — não é desempenho zero e não é Defasagem.
+                e dentro do indicador de participação. A ausência de resultado aparece
+                como travessão — não é desempenho zero e não é Defasagem.
               </TableCaption>
               <Cabecalho />
               <TableBody>

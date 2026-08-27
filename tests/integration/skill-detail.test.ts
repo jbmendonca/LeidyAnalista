@@ -155,7 +155,8 @@ async function gravarResultado(opcoes: {
         valorOriginal: `${h.acertos} / ${h.itens}`,
         acertos: h.acertos,
         itensPossiveis: h.itens,
-        percentual: percentual === null ? null : new Prisma.Decimal(percentual.toFixed(4)),
+        percentual:
+          percentual === null ? null : new Prisma.Decimal(percentual.toFixed(4)),
       }
     }),
   })
@@ -356,7 +357,9 @@ beforeAll(async () => {
 
   // As faixas analíticas precisam existir para a classificação; se o banco ainda não tiver
   // nenhuma versão, a suíte cria a sua e a remove no fim.
-  const faixas = await prisma.analyticalSettings.findFirst({ orderBy: { version: 'desc' } })
+  const faixas = await prisma.analyticalSettings.findFirst({
+    orderBy: { version: 'desc' },
+  })
   if (!faixas) {
     const nova = await prisma.analyticalSettings.create({
       data: {
@@ -414,7 +417,9 @@ afterAll(async () => {
 describe('denominador de referência — FR-016, FR-155, FR-156', () => {
   it('é apurado dos dados, e não fixado em código', async () => {
     const vinculo = await prisma.assessmentSkill.findUniqueOrThrow({
-      where: { assessmentId_skillId: { assessmentId: f.avaliacaoId, skillId: f.skillId } },
+      where: {
+        assessmentId_skillId: { assessmentId: f.avaliacaoId, skillId: f.skillId },
+      },
       select: { referenceItems: true, referenceItemsTiebreak: true },
     })
 
@@ -529,7 +534,10 @@ describe('distribuição por resultado — FR-085, FR-158', () => {
     )
 
     expect(daInfra.distribuicao).toEqual(
-      detalhe?.distribuicao.map((d) => ({ acertos: d.acertos, quantidade: d.quantidade })),
+      detalhe?.distribuicao.map((d) => ({
+        acertos: d.acertos,
+        quantidade: d.quantidade,
+      })),
     )
     expect(daInfra.divergentes).toEqual([{ acertos: 1, itens: 2, quantidade: 1 }])
   })
@@ -699,7 +707,9 @@ describe('estudantes com maior dificuldade — FR-087', () => {
     )
 
     expect(detalhe?.nomesVisiveis).toBe(false)
-    expect(detalhe?.dificuldades.every((e) => e.nomeOriginal === NOME_SUPRIMIDO)).toBe(true)
+    expect(detalhe?.dificuldades.every((e) => e.nomeOriginal === NOME_SUPRIMIDO)).toBe(
+      true,
+    )
     expect(detalhe?.dificuldades[0]?.uniqueCode).toBe(`${PREFIXO}-C`)
     expect(detalhe?.divergentes[0]?.nomeOriginal).toBe(NOME_SUPRIMIDO)
   })
@@ -799,9 +809,7 @@ describe('lista de habilidades do recorte', () => {
 
   it('ordena da maior fragilidade para a menor', async () => {
     const lista = await listarHabilidadesDoRecorte(f.admin, SEM_FILTRO, f.avaliacaoId)
-    const nossas = lista.filter((h) =>
-      [f.skillId, f.skillSecundariaId].includes(h.id),
-    )
+    const nossas = lista.filter((h) => [f.skillId, f.skillSecundariaId].includes(h.id))
 
     // A secundária tem 1/2 = 50%; a principal, 6/11 = 54,55%. A pior vem primeiro.
     expect(nossas[0]?.id).toBe(f.skillSecundariaId)

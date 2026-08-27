@@ -227,7 +227,9 @@ function montarCelula(
           `${fracaoTexto}, ${percentualTexto}.`,
           `Faixa analítica ${ROTULO_FAIXA[faixa ?? 'FRAGILIDADE']}`,
           '(critério analítico do sistema).',
-          resultado?.valorOriginal ? `Registrado na fonte como "${resultado.valorOriginal}".` : '',
+          resultado?.valorOriginal
+            ? `Registrado na fonte como "${resultado.valorOriginal}".`
+            : '',
           habilidade.descricao,
         ]
           .filter((parte) => parte !== '')

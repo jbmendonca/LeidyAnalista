@@ -250,6 +250,7 @@ export async function listarEstudantesDoRecorte(
   // A supressão acontece na fronteira da consulta, antes de qualquer montagem de linha
   // de relatório. Depois deste ponto o nome real não existe mais no processo.
   const suprimidos = aplicarSupressaoNominal(ctx, estudantes)
+  assegurarSupressao(ctx, suprimidos)
 
   return opcoes.ordenarPorPrioridade === true
     ? sortStudentsByPriority(suprimidos)

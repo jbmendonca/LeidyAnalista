@@ -74,16 +74,23 @@ export function RankingHabilidades({
   const comResultado = habilidades.filter((h) => h.percentual !== null).length
 
   return (
-    <section className={cn('space-y-3', className)} aria-labelledby="titulo-ranking-habilidades">
+    <section
+      className={cn('space-y-3', className)}
+      aria-labelledby="titulo-ranking-habilidades"
+    >
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="space-y-1">
-          <h2 id="titulo-ranking-habilidades" className="text-lg font-semibold text-texto">
+          <h2
+            id="titulo-ranking-habilidades"
+            className="text-lg font-semibold text-texto"
+          >
             {titulo}
           </h2>
           <p className="text-sm text-texto-suave">
             {formatarNumero(habilidades.length)} habilidades da avaliação,{' '}
             {formatarNumero(comResultado)} com resultado no recorte. Percentual ={' '}
-            <span className="whitespace-nowrap">Σ acertos ÷ Σ itens</span> entre os avaliados.
+            <span className="whitespace-nowrap">Σ acertos ÷ Σ itens</span> entre os
+            avaliados.
           </p>
         </div>
 
@@ -124,8 +131,8 @@ export function RankingHabilidades({
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <Badge variante="informativo">Ordenado por: {ativo?.rotulo ?? criterio}</Badge>
         <p id={idExplicacao} className="text-rotulo text-texto-suave">
-          {ativo?.explicacao ?? ''} Empates são desfeitos pela maior quantidade de itens e,
-          em seguida, pelo código da habilidade.
+          {ativo?.explicacao ?? ''} Empates são desfeitos pela maior quantidade de itens
+          e, em seguida, pelo código da habilidade.
         </p>
       </div>
 

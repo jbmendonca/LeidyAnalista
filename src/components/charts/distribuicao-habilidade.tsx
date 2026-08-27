@@ -67,7 +67,10 @@ export function DistribuicaoHabilidade({
     )
   }
 
-  const maiorQuantidade = distribuicao.reduce((maior, f) => Math.max(maior, f.quantidade), 0)
+  const maiorQuantidade = distribuicao.reduce(
+    (maior, f) => Math.max(maior, f.quantidade),
+    0,
+  )
 
   return (
     <div className={cn('space-y-2', className)}>
@@ -128,8 +131,8 @@ export function DistribuicaoHabilidade({
           {totalDivergentes === 1
             ? 'registro ficou fora desta distribuição'
             : 'registros ficaram fora desta distribuição'}{' '}
-          por ter denominador diferente do de referência. Eles continuam somando no percentual
-          consolidado da habilidade e estão detalhados abaixo.
+          por ter denominador diferente do de referência. Eles continuam somando no
+          percentual consolidado da habilidade e estão detalhados abaixo.
         </p>
       ) : null}
     </div>

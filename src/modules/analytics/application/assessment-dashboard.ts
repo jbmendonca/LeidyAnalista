@@ -91,7 +91,10 @@ export async function lerConfiguracaoVigente(): Promise<ConfiguracaoAnalitica> {
   const fragilidadeMaxTexto = registro.fragilidadeMax.toString()
   const atencaoMaxTexto = registro.atencaoMax.toString()
 
-  if (!NUMERICO_SEGURO.test(fragilidadeMaxTexto) || !NUMERICO_SEGURO.test(atencaoMaxTexto)) {
+  if (
+    !NUMERICO_SEGURO.test(fragilidadeMaxTexto) ||
+    !NUMERICO_SEGURO.test(atencaoMaxTexto)
+  ) {
     throw new Error(
       `Configuração analítica versão ${registro.version} tem limite fora do formato numérico esperado.`,
     )
@@ -343,15 +346,21 @@ export async function obterPainelAvaliacao(
     classId: params.classId ?? null,
   }
 
-  const [participacaoBruta, geral, distribuicaoBruta, porHabilidade, emFragilidade, porTurma] =
-    await Promise.all([
-      contarParticipacao(ctx, filtros),
-      desempenhoGeral(ctx, filtros),
-      distribuicaoPorNivel(ctx, filtros),
-      desempenhoPorHabilidade(ctx, filtros),
-      estudantesEmFragilidadePorHabilidade(ctx, filtros, configuracao.fragilidadeMaxTexto),
-      desempenhoPorTurma(ctx, filtros),
-    ])
+  const [
+    participacaoBruta,
+    geral,
+    distribuicaoBruta,
+    porHabilidade,
+    emFragilidade,
+    porTurma,
+  ] = await Promise.all([
+    contarParticipacao(ctx, filtros),
+    desempenhoGeral(ctx, filtros),
+    distribuicaoPorNivel(ctx, filtros),
+    desempenhoPorHabilidade(ctx, filtros),
+    estudantesEmFragilidadePorHabilidade(ctx, filtros, configuracao.fragilidadeMaxTexto),
+    desempenhoPorTurma(ctx, filtros),
+  ])
 
   const participacao: ParticipacaoPainel = {
     total: participacaoBruta.total,
@@ -375,10 +384,7 @@ export async function obterPainelAvaliacao(
   // Mais frágil e melhor desempenho são sempre por percentual de acerto, independentemente
   // do critério escolhido para o ranking: são leituras de desempenho, não de ordenação.
   const porPercentual = [...habilidades].sort((a, b) =>
-    compararFracoes(
-      fracaoDaLinha(a),
-      fracaoDaLinha(b),
-    ),
+    compararFracoes(fracaoDaLinha(a), fracaoDaLinha(b)),
   )
   const comResultado = porPercentual.filter((h) => h.percentual !== null)
 
@@ -405,8 +411,14 @@ export async function obterPainelAvaliacao(
     turmasPorMaiorDefasagem: [...turmas].sort(
       (a, b) =>
         compararFracoes(
-          fracao(b.proporcaoDefasagem.numerador ?? 0, b.proporcaoDefasagem.denominador ?? 0),
-          fracao(a.proporcaoDefasagem.numerador ?? 0, a.proporcaoDefasagem.denominador ?? 0),
+          fracao(
+            b.proporcaoDefasagem.numerador ?? 0,
+            b.proporcaoDefasagem.denominador ?? 0,
+          ),
+          fracao(
+            a.proporcaoDefasagem.numerador ?? 0,
+            a.proporcaoDefasagem.denominador ?? 0,
+          ),
         ) || a.nome.localeCompare(b.nome, 'pt-BR'),
     ),
   }
@@ -476,7 +488,10 @@ function montarDistribuicao(
 
 async function montarRankingHabilidades(entrada: {
   assessmentId: string
-  porHabilidade: Map<string, { acertos: number; itens: number; estudantesComResultado: number }>
+  porHabilidade: Map<
+    string,
+    { acertos: number; itens: number; estudantesComResultado: number }
+  >
   emFragilidade: Map<string, number>
   configuracao: ConfiguracaoAnalitica
   criterio: RankCriterion
@@ -490,7 +505,13 @@ async function montarRankingHabilidades(entrada: {
     where: { assessmentId },
     select: {
       skill: {
-        select: { id: true, shortCode: true, referenceCode: true, descricao: true, ordem: true },
+        select: {
+          id: true,
+          shortCode: true,
+          referenceCode: true,
+          descricao: true,
+          ordem: true,
+        },
       },
     },
   })
@@ -560,7 +581,10 @@ async function montarRankingHabilidades(entrada: {
 async function montarTurmas(
   ctx: AuthContext,
   filtros: FiltrosAnalise,
-  porTurma: Map<string, { acertos: number; itens: number; avaliados: number; total: number }>,
+  porTurma: Map<
+    string,
+    { acertos: number; itens: number; avaliados: number; total: number }
+  >,
 ): Promise<readonly LinhaTurma[]> {
   const ids = [...porTurma.keys()]
   if (ids.length === 0) return []

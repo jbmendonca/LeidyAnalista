@@ -277,7 +277,8 @@ function faixaDePercentual(
 
   const filtro: Prisma.DecimalFilter = {}
   if (minimo !== null) filtro.gte = new Prisma.Decimal(minimo.toFixed(4))
-  if (maximoInclusivo !== null) filtro.lte = new Prisma.Decimal(maximoInclusivo.toFixed(4))
+  if (maximoInclusivo !== null)
+    filtro.lte = new Prisma.Decimal(maximoInclusivo.toFixed(4))
   if (limiteExclusivo !== null) filtro.lt = new Prisma.Decimal(limiteExclusivo.toFixed(4))
 
   return Object.keys(filtro).length === 0 ? null : filtro
@@ -511,7 +512,14 @@ export async function obterDetalheDaHabilidade(
   // --- FR-086: ranking das turmas nesta habilidade -------------------------
   const porTurma = new Map<
     string,
-    { turma: string; codigoTurma: string; escola: string; acertos: number; itens: number; n: number }
+    {
+      turma: string
+      codigoTurma: string
+      escola: string
+      acertos: number
+      itens: number
+      n: number
+    }
   >()
 
   for (const l of linhas) {

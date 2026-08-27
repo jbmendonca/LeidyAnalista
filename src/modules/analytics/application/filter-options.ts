@@ -175,9 +175,7 @@ export async function carregarOpcoesDeFiltro(
               },
             },
           })
-          .then((v) =>
-            v.map((x) => x.skill).sort((a, b) => a.ordem - b.ordem),
-          ),
+          .then((v) => v.map((x) => x.skill).sort((a, b) => a.ordem - b.ordem)),
   ])
 
   const escolasDoRecorte = filtros.escola
@@ -190,7 +188,8 @@ export async function carregarOpcoesDeFiltro(
   for (const a of avaliacoes) rotulosPorValor[a.id] = `${a.nome} (${a.ano})`
   for (const e of escolas) rotulosPorValor[e.id] = e.name
   for (const t of turmas) rotulosPorValor[t.id] = `${t.name} — ${t.externalCode}`
-  for (const h of habilidades) rotulosPorValor[h.id] = `${h.shortCode} — ${h.referenceCode}`
+  for (const h of habilidades)
+    rotulosPorValor[h.id] = `${h.shortCode} — ${h.referenceCode}`
   for (const e of estudantes.lista) rotulosPorValor[e.valor] = e.rotulo
 
   return {

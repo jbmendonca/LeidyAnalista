@@ -53,11 +53,14 @@ export default async function PaginaPainelEscola({
   const mostrarAbaixo = consulta['abaixo'] === '1'
   const avaliacaoPedida = consulta['avaliacao']
 
-  const { escola, avaliacoes, avaliacaoSelecionada, painel } = await obterPainelEscola(ctx, {
-    schoolId,
-    assessmentId: typeof avaliacaoPedida === 'string' ? avaliacaoPedida : null,
-    criterio,
-  })
+  const { escola, avaliacoes, avaliacaoSelecionada, painel } = await obterPainelEscola(
+    ctx,
+    {
+      schoolId,
+      assessmentId: typeof avaliacaoPedida === 'string' ? avaliacaoPedida : null,
+      criterio,
+    },
+  )
 
   const parametros = new URLSearchParams({ ordenar: criterio })
   if (avaliacaoSelecionada) parametros.set('avaliacao', avaliacaoSelecionada.id)
@@ -126,7 +129,10 @@ export default async function PaginaPainelEscola({
           titulo="Nenhuma avaliação com resultados nesta escola"
           orientacao="Nenhum resultado foi importado para esta escola. O painel fica sem indicadores em vez de exibir zeros: zero afirmaria desempenho nulo, e o fato é que não há dado."
           acao={
-            <Link href="/importacoes" className="text-primaria underline underline-offset-4">
+            <Link
+              href="/importacoes"
+              className="text-primaria underline underline-offset-4"
+            >
               Ir para importações
             </Link>
           }
@@ -147,11 +153,12 @@ export default async function PaginaPainelEscola({
               </div>
 
               {avaliacoes.length > 1 ? (
-                <form method="get" className="flex flex-wrap items-end gap-2 nao-imprimir">
+                <form
+                  method="get"
+                  className="flex flex-wrap items-end gap-2 nao-imprimir"
+                >
                   <input type="hidden" name="ordenar" value={criterio} />
-                  {mostrarAbaixo ? (
-                    <input type="hidden" name="abaixo" value="1" />
-                  ) : null}
+                  {mostrarAbaixo ? <input type="hidden" name="abaixo" value="1" /> : null}
                   <div className="space-y-1">
                     <label
                       htmlFor="avaliacao-do-painel"

@@ -78,8 +78,9 @@ export function TabelaHabilidadesTurma({
         <Table>
           <TableCaption>
             Ordenada da maior fragilidade para o melhor desempenho. Desempenho é{' '}
-            <strong className="font-medium text-texto">Σ acertos ÷ Σ itens</strong> entre os
-            estudantes avaliados — os não avaliados ficam fora do numerador e do denominador.
+            <strong className="font-medium text-texto">Σ acertos ÷ Σ itens</strong> entre
+            os estudantes avaliados — os não avaliados ficam fora do numerador e do
+            denominador.
           </TableCaption>
           <TableHeader>
             <TableRow>

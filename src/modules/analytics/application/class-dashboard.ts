@@ -179,7 +179,10 @@ export type DashboardDaTurma = Readonly<{
  * a linha de outra escola nunca chega à memória, e a resposta é indistinguível de
  * identificador inexistente — 404, nunca 403 (FR-006).
  */
-async function lerTurmaNoEscopo(ctx: AuthContext, classId: string): Promise<CabecalhoTurma> {
+async function lerTurmaNoEscopo(
+  ctx: AuthContext,
+  classId: string,
+): Promise<CabecalhoTurma> {
   const escopo = schoolScopeFilter(ctx)
 
   const turma = await prisma.class.findFirst({
@@ -276,8 +279,7 @@ function formatarDesempenho(fracao: MaybeFraction): DesempenhoFormatado {
   return {
     acertos: fracao === null ? null : fracao.acertos,
     itens: fracao === null ? null : fracao.itens,
-    fracaoTexto:
-      fracao === null ? AUSENTE : formatarFracao(fracao.acertos, fracao.itens),
+    fracaoTexto: fracao === null ? AUSENTE : formatarFracao(fracao.acertos, fracao.itens),
     percentualTexto: formatPercent(toPercent(fracao)),
   }
 }
@@ -306,14 +308,19 @@ export async function obterDashboardDaTurma(
     classId: turma.classId,
   }
 
-  const [participacaoBruta, distribuicao, geral, porHabilidade, fragilidadePorHabilidade] =
-    await Promise.all([
-      contarParticipacao(ctx, filtros),
-      distribuicaoPorNivel(ctx, filtros),
-      desempenhoGeral(ctx, filtros),
-      desempenhoPorHabilidade(ctx, filtros),
-      estudantesEmFragilidadePorHabilidade(ctx, filtros, faixas.fragilidadeMaxTexto),
-    ])
+  const [
+    participacaoBruta,
+    distribuicao,
+    geral,
+    porHabilidade,
+    fragilidadePorHabilidade,
+  ] = await Promise.all([
+    contarParticipacao(ctx, filtros),
+    distribuicaoPorNivel(ctx, filtros),
+    desempenhoGeral(ctx, filtros),
+    desempenhoPorHabilidade(ctx, filtros),
+    estudantesEmFragilidadePorHabilidade(ctx, filtros, faixas.fragilidadeMaxTexto),
+  ])
 
   const habilidadesDaAvaliacao = await prisma.assessmentSkill.findMany({
     where: { assessmentId: avaliacao.id },
@@ -402,7 +409,10 @@ export async function obterDashboardDaTurma(
     },
   })
 
-  const resultadosPorEstudante = new Map<string, ReadonlyMap<string, ResultadoDeHabilidade>>()
+  const resultadosPorEstudante = new Map<
+    string,
+    ReadonlyMap<string, ResultadoDeHabilidade>
+  >()
 
   const estudantes: EstudanteDaTurma[] = linhas.map((linha) => {
     const porSkill = new Map<string, ResultadoDeHabilidade>()
@@ -432,7 +442,10 @@ export async function obterDashboardDaTurma(
       for (const coluna of colunas) {
         const bruto = porSkill.get(coluna.skillId)
         const fracao =
-          bruto && bruto.acertos !== null && bruto.itensPossiveis !== null && bruto.itensPossiveis > 0
+          bruto &&
+          bruto.acertos !== null &&
+          bruto.itensPossiveis !== null &&
+          bruto.itensPossiveis > 0
             ? { acertos: bruto.acertos, itens: bruto.itensPossiveis }
             : null
         const faixa = classifyAnalyticalSkillResult(fracao, faixas.bands)

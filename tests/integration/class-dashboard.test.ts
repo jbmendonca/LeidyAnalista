@@ -138,7 +138,10 @@ let f: Fixtura
  * percentual exista exatamente quando a fração existe — e não exista em nenhum outro caso.
  * A derivação passa por `toPercent`, nunca por divisão em ponto flutuante (Const. II).
  */
-function percentualPersistido(acertos: number | null, itens: number | null): string | null {
+function percentualPersistido(
+  acertos: number | null,
+  itens: number | null,
+): string | null {
   if (acertos === null || itens === null || itens <= 0) return null
   return (toPercent({ acertos, itens }) ?? null)?.toFixed(4) ?? null
 }
@@ -302,7 +305,8 @@ beforeAll(async () => {
         skillResults: {
           create: semente.acertos.map((acertos, indice) => ({
             skillId: skillIds[indice] ?? '',
-            valorOriginal: acertos === null ? null : `${acertos} / ${ITENS_POR_HABILIDADE}`,
+            valorOriginal:
+              acertos === null ? null : `${acertos} / ${ITENS_POR_HABILIDADE}`,
             acertos,
             itensPossiveis: acertos === null ? null : ITENS_POR_HABILIDADE,
             percentual: percentualPersistido(
@@ -342,7 +346,9 @@ afterAll(async () => {
   await prisma.skill.deleteMany({ where: { id: { in: criados.skillIds } } })
   await prisma.assessment.deleteMany({ where: { id: { in: criados.assessmentIds } } })
   await prisma.school.deleteMany({ where: { id: { in: criados.schoolIds } } })
-  await prisma.analyticalSettings.deleteMany({ where: { id: { in: criados.settingsIds } } })
+  await prisma.analyticalSettings.deleteMany({
+    where: { id: { in: criados.settingsIds } },
+  })
   await prisma.auditLog.deleteMany({ where: { userId: { in: criados.userIds } } })
   await prisma.user.deleteMany({ where: { id: { in: criados.userIds } } })
   await prisma.$disconnect()
@@ -460,9 +466,9 @@ describe('não avaliados', () => {
     const naoAvaliados = new Set(
       conteudo?.estudantesNaoAvaliados.map((e) => e.studentId) ?? [],
     )
-    expect(
-      conteudo?.estudantesAvaliados.some((e) => naoAvaliados.has(e.studentId)),
-    ).toBe(false)
+    expect(conteudo?.estudantesAvaliados.some((e) => naoAvaliados.has(e.studentId))).toBe(
+      false,
+    )
   })
 
   it('nunca recebe rótulo de Defasagem nem nível normalizado inventado', async () => {
@@ -622,8 +628,8 @@ describe('escopo por escola', () => {
   it('responde 404 — não 403 — para turma fora do escopo do requisitante', async () => {
     const semEscopo: AuthContext = { ...f.admin, allowedSchoolIds: [] }
 
-    await expect(obterDashboardDaTurma(semEscopo, f.classId, f.assessmentId)).rejects.toMatchObject(
-      { codigo: 'NAO_ENCONTRADO', status: 404 },
-    )
+    await expect(
+      obterDashboardDaTurma(semEscopo, f.classId, f.assessmentId),
+    ).rejects.toMatchObject({ codigo: 'NAO_ENCONTRADO', status: 404 })
   })
 })

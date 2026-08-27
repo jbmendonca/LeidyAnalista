@@ -7,7 +7,7 @@ import {
   ROTULO_PARTICIPACAO,
 } from '@/modules/analytics/application/student-record'
 import { AUSENTE, formatarNumero } from '@/lib/format'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card } from '@/components/ui/card'
 import { FaixaBadge, LegendaFaixaAnalitica } from '@/components/ui/faixa-badge'
 import { NivelBadge } from '@/components/ui/nivel-badge'
 import {
@@ -278,7 +278,9 @@ export default async function PaginaFichaDoEstudante({
                             <span className="apenas-leitor-de-tela">Sem dado</span>
                           </>
                         ) : (
-                          <span className="font-medium">{habilidade.percentualTexto}</span>
+                          <span className="font-medium">
+                            {habilidade.percentualTexto}
+                          </span>
                         )}
                       </TableCell>
                       <TableCell>

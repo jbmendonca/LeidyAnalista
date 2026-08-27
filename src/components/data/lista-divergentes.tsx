@@ -63,7 +63,10 @@ export function ListaDivergentes({
         Registros fora da distribuição
       </h2>
 
-      <Alert variante="aviso" titulo={`${formatarNumero(total)} ${total === 1 ? 'registro ficou' : 'registros ficaram'} fora da distribuição`}>
+      <Alert
+        variante="aviso"
+        titulo={`${formatarNumero(total)} ${total === 1 ? 'registro ficou' : 'registros ficaram'} fora da distribuição`}
+      >
         <p>
           O denominador de referência desta habilidade é{' '}
           <strong className="font-semibold">
@@ -84,7 +87,9 @@ export function ListaDivergentes({
         </p>
         <p>
           A exclusão vale apenas para a distribuição:{' '}
-          {total === 1 ? 'este registro continua somando' : 'estes registros continuam somando'}{' '}
+          {total === 1
+            ? 'este registro continua somando'
+            : 'estes registros continuam somando'}{' '}
           no percentual consolidado da habilidade, que permanece Σ acertos ÷ Σ itens
           possíveis.
         </p>

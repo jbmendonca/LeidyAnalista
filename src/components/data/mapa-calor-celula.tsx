@@ -29,7 +29,8 @@ import type { CelulaMapaCalor } from '@/modules/analytics/application/heatmap'
  */
 
 const FUNDO_POR_FAIXA = {
-  FRAGILIDADE: 'bg-faixa-fragilidade-fundo text-faixa-fragilidade border-faixa-fragilidade-borda',
+  FRAGILIDADE:
+    'bg-faixa-fragilidade-fundo text-faixa-fragilidade border-faixa-fragilidade-borda',
   ATENCAO: 'bg-faixa-atencao-fundo text-faixa-atencao border-faixa-atencao-borda',
   SATISFATORIO:
     'bg-faixa-satisfatorio-fundo text-faixa-satisfatorio border-faixa-satisfatorio-borda',
@@ -95,7 +96,10 @@ export function MapaCalorCelula({ celula, className }: PropsMapaCalorCelula) {
         role="note"
         title={celula.rotuloAcessivel}
         aria-label={celula.rotuloAcessivel}
-        className={cn(base, faixa ? FUNDO_POR_FAIXA[faixa] : 'border-borda bg-superficie')}
+        className={cn(
+          base,
+          faixa ? FUNDO_POR_FAIXA[faixa] : 'border-borda bg-superficie',
+        )}
       >
         {/* O valor numérico permanece visível: a cor acompanha, nunca substitui. */}
         <span className="text-sm font-semibold tabular-nums">{celula.fracaoTexto}</span>

@@ -41,7 +41,11 @@ type Busca = Promise<Record<string, string | string[] | undefined>>
  * Recorte sem registros mostra estado vazio com orientação — nunca indicadores zerados
  * (FR-099, Const. I).
  */
-export default async function PaginaHabilidades({ searchParams }: { searchParams: Busca }) {
+export default async function PaginaHabilidades({
+  searchParams,
+}: {
+  searchParams: Busca
+}) {
   const ctx = await getAuthContext()
   if (!ctx) redirect('/entrar')
 
@@ -54,7 +58,9 @@ export default async function PaginaHabilidades({ searchParams }: { searchParams
     ])
 
     const habilidades =
-      avaliacao === null ? [] : await listarHabilidadesDoRecorte(ctx, filtros, avaliacao.id)
+      avaliacao === null
+        ? []
+        : await listarHabilidadesDoRecorte(ctx, filtros, avaliacao.id)
 
     const query = filtrosParaQuery(filtros)
     if (avaliacao) query.set('avaliacao', avaliacao.id)
@@ -90,8 +96,8 @@ export default async function PaginaHabilidades({ searchParams }: { searchParams
             <TableContainer rotulo="Habilidades da avaliação no recorte">
               <Table>
                 <caption className="px-3 py-2 text-left text-rotulo text-texto-suave">
-                  Ordenadas da maior fragilidade para a menor. O percentual é Σ acertos ÷ Σ
-                  itens dos estudantes avaliados — nunca a média dos percentuais.
+                  Ordenadas da maior fragilidade para a menor. O percentual é Σ acertos ÷
+                  Σ itens dos estudantes avaliados — nunca a média dos percentuais.
                 </caption>
                 <TableHeader>
                   <TableRow>

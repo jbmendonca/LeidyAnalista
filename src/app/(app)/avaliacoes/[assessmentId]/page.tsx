@@ -176,7 +176,8 @@ export default async function PaginaPainelAvaliacao({
                 naoAvaliados={participacao.naoAvaliados}
                 abaixoDoAdequado={{
                   mostrar:
-                    mostrarAbaixo || distribuicao.abaixoDoAdequado.habilitadoNaConfiguracao,
+                    mostrarAbaixo ||
+                    distribuicao.abaixoDoAdequado.habilitadoNaConfiguracao,
                   habilitadoNaConfiguracao:
                     distribuicao.abaixoDoAdequado.habilitadoNaConfiguracao,
                   componentes: distribuicao.abaixoDoAdequado.componentes,
@@ -244,8 +245,8 @@ export default async function PaginaPainelAvaliacao({
             descricao={
               <>
                 Ordenadas do menor para o maior <span>Σ acertos ÷ Σ itens</span> entre os
-                estudantes avaliados. Turma sem nenhum avaliado aparece com travessão e vai
-                para o fim: ausência de dado não é o pior desempenho.
+                estudantes avaliados. Turma sem nenhum avaliado aparece com travessão e
+                vai para o fim: ausência de dado não é o pior desempenho.
               </>
             }
           />

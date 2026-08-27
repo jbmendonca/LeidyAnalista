@@ -100,12 +100,16 @@ export default async function PaginaHabilidade({
             orientacao={
               <>
                 Esta habilidade não tem denominador de referência apurado na avaliação
-                selecionada — o que só acontece quando nenhum resultado dela foi importado. A
-                quantidade de itens nunca é presumida pelo sistema: ela nasce dos dados.
+                selecionada — o que só acontece quando nenhum resultado dela foi
+                importado. A quantidade de itens nunca é presumida pelo sistema: ela nasce
+                dos dados.
               </>
             }
             acao={
-              <Link href="/habilidades" className={variantesBotao({ variante: 'secundario' })}>
+              <Link
+                href="/habilidades"
+                className={variantesBotao({ variante: 'secundario' })}
+              >
                 Voltar às habilidades
               </Link>
             }
