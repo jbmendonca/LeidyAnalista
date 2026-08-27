@@ -13,7 +13,9 @@ export type PropsEmptyState = {
   acao?: React.ReactNode
   /** Ícone alternativo, já dimensionado pelo componente. */
   icone?: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' }>
-  className?: string
+  /** `| undefined` explícito: com `exactOptionalPropertyTypes`, repassar uma
+   *  `className` possivelmente indefinida exige que o alvo a aceite. */
+  className?: string | undefined
 }
 
 /**
