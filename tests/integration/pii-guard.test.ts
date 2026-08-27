@@ -58,18 +58,64 @@ describe('guarda do logger', () => {
 })
 
 describe('auditoria não guarda dado nominal', () => {
-  it('nenhum registro de AuditLog contém campo de nome', async () => {
+  /**
+   * "Nome" não é uma categoria só.
+   *
+   * O nome de uma **escola**, de uma **avaliação** ou de uma **turma** é dado
+   * institucional: registrá-lo na auditoria é o que torna a trilha legível —
+   * "alterou a Escola X" diz algo, "alterou a entidade cmt…" não diz nada.
+   *
+   * O nome de um **estudante** ou de um **usuário** é dado pessoal, e aí a
+   * proibição é absoluta (FR-009). A auditoria dessas entidades referencia por
+   * identificador — `uniqueCode` para estudante, `userId` para usuário.
+   */
+  const ENTIDADES_PESSOAIS = ['Student', 'User']
+
+  it('auditoria de pessoa nunca contém nome, e-mail ou hash', async () => {
     const registros = await prisma.auditLog.findMany({
-      take: 500,
+      where: { entityType: { in: ENTIDADES_PESSOAIS } },
+      take: 1000,
       orderBy: { occurredAt: 'desc' },
-      select: { beforeValue: true, afterValue: true, metadata: true },
+      select: { entityType: true, beforeValue: true, afterValue: true, metadata: true },
     })
 
     for (const r of registros) {
-      const serializado = JSON.stringify([r.beforeValue, r.afterValue, r.metadata])
-      expect(serializado.toLowerCase()).not.toMatch(
-        /"(nome|nomeoriginal|nomenormalizado|estudante|studentname)"\s*:/,
+      const serializado = JSON.stringify([
+        r.beforeValue,
+        r.afterValue,
+        r.metadata,
+      ]).toLowerCase()
+
+      expect(serializado, `${r.entityType} vazou nome`).not.toMatch(
+        /"(nome|name|nomeoriginal|nomenormalizado|estudante|studentname)"\s*:/,
       )
+      expect(serializado, `${r.entityType} vazou e-mail`).not.toMatch(/"email"\s*:/)
+      expect(serializado, `${r.entityType} vazou hash de senha`).not.toMatch(
+        /"passwordhash"\s*:/,
+      )
+    }
+  })
+
+  it('auditoria de entidade institucional nunca contém nome de pessoa', async () => {
+    const registros = await prisma.auditLog.findMany({
+      where: { entityType: { notIn: ENTIDADES_PESSOAIS } },
+      take: 1000,
+      orderBy: { occurredAt: 'desc' },
+      select: { entityType: true, beforeValue: true, afterValue: true, metadata: true },
+    })
+
+    for (const r of registros) {
+      const serializado = JSON.stringify([
+        r.beforeValue,
+        r.afterValue,
+        r.metadata,
+      ]).toLowerCase()
+
+      // `nome` de escola/avaliação/turma é legítimo; campo de pessoa, não.
+      expect(serializado, `${r.entityType} vazou nome de estudante`).not.toMatch(
+        /"(nomeoriginal|nomenormalizado|estudante|studentname)"\s*:/,
+      )
+      expect(serializado, `${r.entityType} vazou e-mail`).not.toMatch(/"email"\s*:/)
     }
   })
 

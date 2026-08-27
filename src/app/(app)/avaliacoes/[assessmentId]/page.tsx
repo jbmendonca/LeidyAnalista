@@ -17,6 +17,14 @@ import { IndicatorCard } from '@/components/data/indicator-card'
 import { RankingHabilidades } from '@/components/data/ranking-habilidades'
 import { RankingTurmas } from '@/components/data/ranking-turmas'
 import { DistribuicaoNivel } from '@/components/charts/distribuicao-nivel'
+import { GraficoRankingHabilidades } from '@/components/charts/grafico-ranking-habilidades'
+import { GraficoParticipacao } from '@/components/charts/grafico-participacao'
+import {
+  GraficoComposicaoTurmas,
+  GraficoDesempenhoTurmas,
+} from '@/components/charts/grafico-turmas'
+import { GraficoDispersaoHabilidades } from '@/components/charts/grafico-dispersao-habilidades'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export const metadata = { title: 'Painel da avaliação' }
 
@@ -57,7 +65,7 @@ export default async function PaginaPainelAvaliacao({
 
   const painel = await obterPainelAvaliacao(ctx, { assessmentId, criterio })
 
-  const { avaliacao, participacao, distribuicao, configuracao } = painel
+  const { avaliacao, participacao, distribuicao, configuracao, desempenhoGeral } = painel
   const semRegistros = participacao.total === 0
 
   const parametros = new URLSearchParams({ ordenar: criterio })
@@ -111,6 +119,29 @@ export default async function PaginaPainelAvaliacao({
             <h2 id="titulo-indicadores" className="text-lg font-semibold text-texto">
               Indicadores gerais
             </h2>
+
+            {/*
+              A barra de participação abre o painel de propósito: ela mostra, de
+              uma vez, quem entra em cada conta. Sem esse enquadramento, o leitor
+              tende a ler todo percentual seguinte como se fosse sobre o total
+              importado — e não é.
+            */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Participação</CardTitle>
+                <CardDescription>
+                  Quem foi avaliado e quem não foi, sobre o total importado.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <GraficoParticipacao
+                  total={participacao.total}
+                  avaliados={participacao.avaliados}
+                  naoAvaliados={participacao.naoAvaliados}
+                  taxaFormatada={participacao.taxa.percentualFormatado}
+                />
+              </CardContent>
+            </Card>
 
             <div className="grid grid-cols-1 gap-3 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
               <IndicatorCard
@@ -228,6 +259,110 @@ export default async function PaginaPainelAvaliacao({
             </div>
           </div>
 
+          {/*
+            Leitura visual antes da tabela.
+
+            A tabela continua abaixo e é a fonte auditável — cada percentual com
+            seu numerador e denominador. O gráfico existe para responder em um
+            olhar a pergunta que a tabela responde em trinta segundos: onde a
+            rede está mais frágil, e o quanto.
+          */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Onde estão as fragilidades</CardTitle>
+              <CardDescription>
+                Percentual de acerto de cada habilidade, da mais frágil para a de melhor
+                desempenho. As réguas tracejadas marcam os limites das faixas analíticas
+                vigentes ({configuracao.fragilidadeMaxTexto} e {configuracao.atencaoMaxTexto}).
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <GraficoRankingHabilidades
+                habilidades={painel.habilidades.map((h) => ({
+                  shortCode: h.shortCode,
+                  referenceCode: h.referenceCode,
+                  descricao: h.descricao,
+                  acertos: h.acertos,
+                  itens: h.itens,
+                  percentual: h.percentual === null ? null : h.percentual.toNumber(),
+                  percentualFormatado: h.percentualFormatado,
+                  faixa: h.faixa,
+                  estudantesEmFragilidade: h.estudantesEmFragilidade,
+                  estudantesComResultado: h.estudantesComResultado,
+                }))}
+                fragilidadeMax={configuracao.fragilidadeMax.toNumber()}
+                atencaoMax={configuracao.atencaoMax.toNumber()}
+              />
+            </CardContent>
+          </Card>
+
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Média não é a história toda</CardTitle>
+                <CardDescription>
+                  Desempenho da habilidade contra a proporção de estudantes que ficaram em
+                  Fragilidade nela.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <GraficoDispersaoHabilidades
+                  habilidades={painel.habilidades.map((h) => ({
+                    shortCode: h.shortCode,
+                    descricao: h.descricao,
+                    percentual: h.percentual === null ? null : h.percentual.toNumber(),
+                    percentualFormatado: h.percentualFormatado,
+                    fragilidadePercentual:
+                      h.estudantesComResultado > 0
+                        ? (h.estudantesEmFragilidade / h.estudantesComResultado) * 100
+                        : null,
+                    fragilidadeFormatada: h.fragilidadeFormatada,
+                    estudantesEmFragilidade: h.estudantesEmFragilidade,
+                    estudantesComResultado: h.estudantesComResultado,
+                    faixa: h.faixa,
+                  }))}
+                  fragilidadeMax={configuracao.fragilidadeMax.toNumber()}
+                />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Desempenho por turma</CardTitle>
+                <CardDescription>
+                  Cada turma contra o desempenho geral do recorte.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <GraficoDesempenhoTurmas
+                  turmas={painel.turmasPorMenorDesempenho.map(paraBarraTurma)}
+                  mediaGeral={
+                    desempenhoGeral.percentual === null
+                      ? null
+                      : desempenhoGeral.percentual.toNumber()
+                  }
+                  mediaGeralFormatada={desempenhoGeral.percentualFormatado}
+                />
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Composição de cada turma</CardTitle>
+              <CardDescription>
+                Como os estudantes de cada turma se distribuem entre os níveis da fonte, com
+                os não avaliados à parte. Duas turmas com a mesma média podem ter composições
+                muito diferentes — e pedir ações diferentes.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <GraficoComposicaoTurmas
+                turmas={painel.turmasPorMenorDesempenho.map(paraBarraTurma)}
+              />
+            </CardContent>
+          </Card>
+
           <RankingHabilidades
             habilidades={painel.habilidades}
             criterio={painel.criterio}
@@ -270,4 +405,39 @@ export default async function PaginaPainelAvaliacao({
       )}
     </div>
   )
+}
+
+/** Converte a linha de turma do painel para o formato dos gráficos. */
+function paraBarraTurma(t: {
+  classId: string
+  nome: string
+  total: number
+  avaliados: number
+  naoAvaliados: number
+  desempenho: {
+    numerador: number | null
+    denominador: number | null
+    percentual: { toNumber(): number } | null
+    percentualFormatado: string
+  }
+  adequado: number
+  intermediario: number
+  defasagem: number
+  semNivel: number
+}) {
+  return {
+    classId: t.classId,
+    nome: t.nome,
+    total: t.total,
+    avaliados: t.avaliados,
+    naoAvaliados: t.naoAvaliados,
+    acertos: t.desempenho.numerador,
+    itens: t.desempenho.denominador,
+    percentual: t.desempenho.percentual === null ? null : t.desempenho.percentual.toNumber(),
+    percentualFormatado: t.desempenho.percentualFormatado,
+    adequado: t.adequado,
+    intermediario: t.intermediario,
+    defasagem: t.defasagem,
+    semNivel: t.semNivel,
+  }
 }

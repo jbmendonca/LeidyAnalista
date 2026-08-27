@@ -11,10 +11,20 @@ import { criarEscola, criarUsuario, entrar, limpar, prisma, type UsuarioTeste } 
 
 const SUFIXO = `resp${Date.now()}`
 let usuario: UsuarioTeste
+let rotaPainel: string | null = null
 
 test.beforeAll(async () => {
   const escola = await criarEscola(SUFIXO, 'EscolaResp')
   usuario = await criarUsuario({ sufixo: SUFIXO, role: 'ADMIN', escolas: [escola] })
+
+  // O painel da avaliação é a tela mais densa do sistema — quatro gráficos e
+  // três tabelas largas. Era justamente ela que faltava aqui.
+  const avaliacao = await prisma.assessment.findFirst({
+    where: { results: { some: {} } },
+    orderBy: { createdAt: 'desc' },
+    select: { id: true },
+  })
+  rotaPainel = avaliacao ? `/avaliacoes/${avaliacao.id}` : null
 })
 
 test.afterAll(async () => {
@@ -22,7 +32,15 @@ test.afterAll(async () => {
   await prisma.$disconnect()
 })
 
-const ROTAS = ['/avaliacoes', '/escolas', '/turmas', '/estudantes', '/importacoes']
+const ROTAS = [
+  '/avaliacoes',
+  '/escolas',
+  '/turmas',
+  '/estudantes',
+  '/importacoes',
+  '/habilidades',
+  '/relatorios',
+]
 
 for (const rota of ROTAS) {
   test(`${rota} não produz rolagem horizontal da página`, async ({ page }, info) => {
@@ -84,4 +102,36 @@ test('a navegação permanece alcançável no celular', async ({ page }, info) =
   await abrir.click()
 
   await expect(page.getByRole('link', { name: /importações/i })).toBeVisible()
+})
+
+test('o painel da avaliação, com gráficos, não rola na horizontal', async ({ page }, info) => {
+  test.skip(rotaPainel === null, 'nenhuma avaliação com resultado no banco')
+
+  await entrar(page, usuario)
+  await page.goto(rotaPainel!)
+  await page.waitForLoadState('networkidle')
+
+  const medida = await page.evaluate(() => {
+    const antes = window.scrollX
+    window.scrollTo(9999, 0)
+    const depois = window.scrollX
+    window.scrollTo(antes, 0)
+
+    // Um SVG que estoura o cartão que o contém é a origem clássica de gráfico
+    // sobrepondo o bloco vizinho.
+    const graficos = [...document.querySelectorAll('svg.recharts-surface')].map((s) => {
+      const r = s.getBoundingClientRect()
+      const pai = s.closest('.recharts-responsive-container')?.parentElement
+      const pr = pai?.getBoundingClientRect()
+      return pr ? Math.round(Math.max(r.bottom - pr.bottom, r.right - pr.right)) : 0
+    })
+
+    return { rolou: depois > antes, transbordoDeGrafico: Math.max(0, ...graficos, 0) }
+  })
+
+  expect(medida.rolou, `${rotaPainel} em ${info.project.name} rola na horizontal`).toBe(false)
+  expect(
+    medida.transbordoDeGrafico,
+    `gráfico transborda o cartão em ${info.project.name}`,
+  ).toBeLessThanOrEqual(1)
 })

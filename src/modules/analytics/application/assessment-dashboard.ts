@@ -236,6 +236,14 @@ export type LinhaTurma = Readonly<{
   desempenho: Percentual
   defasagem: number
   proporcaoDefasagem: Percentual
+  /**
+   * Composição por nível da fonte. A média sozinha não distingue uma turma
+   * homogênea de outra partida ao meio — e a ação pedagógica é diferente nos
+   * dois casos. Denominador de cada contagem: os avaliados da turma (FR-062).
+   */
+  adequado: number
+  intermediario: number
+  semNivel: number
 }>
 
 export type PainelAvaliacao = Readonly<{
@@ -609,15 +617,16 @@ async function montarTurmas(
       distribuicao: await distribuicaoPorNivel(ctx, { ...filtros, classId: turma.id }),
     })),
   )
-  const defasagemPorTurma = new Map(
-    distribuicoes.map((d) => [d.classId, d.distribuicao.defasagem]),
+  const distribuicaoPorTurma = new Map(
+    distribuicoes.map((d) => [d.classId, d.distribuicao]),
   )
 
   return turmas.map<LinhaTurma>((turma) => {
     const soma = porTurma.get(turma.id)
     const avaliados = soma?.avaliados ?? 0
     const total = soma?.total ?? 0
-    const defasagem = defasagemPorTurma.get(turma.id) ?? 0
+    const dist = distribuicaoPorTurma.get(turma.id)
+    const defasagem = dist?.defasagem ?? 0
 
     return {
       classId: turma.id,
@@ -633,6 +642,9 @@ async function montarTurmas(
       defasagem,
       // Denominador da Defasagem é o de avaliados da turma, coerente com FR-062.
       proporcaoDefasagem: derivarContagem(defasagem, avaliados),
+      adequado: dist?.adequado ?? 0,
+      intermediario: dist?.intermediario ?? 0,
+      semNivel: dist?.semNivel ?? 0,
     }
   })
 }
