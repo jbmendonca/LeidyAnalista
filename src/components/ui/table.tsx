@@ -169,7 +169,10 @@ export const TableRowHeader = React.forwardRef<
     <th
       ref={ref}
       scope="row"
-      className={cn('px-3 py-2.5 text-left align-middle font-medium text-texto', className)}
+      className={cn(
+        'px-3 py-2.5 text-left align-middle font-medium text-texto',
+        className,
+      )}
       {...props}
     />
   )

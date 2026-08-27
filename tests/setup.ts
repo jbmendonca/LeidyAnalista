@@ -5,7 +5,9 @@
  * integração precisam do ambiente validado por `src/lib/env.ts`, que lança se
  * uma variável estiver ausente — daí os valores padrão abaixo.
  */
-process.env.NODE_ENV = process.env.NODE_ENV ?? 'test'
+// `NODE_ENV` é somente leitura nos tipos do Node; a atribuição é legítima em
+// tempo de execução, e este é o lugar certo para fazê-la.
+process.env['NODE_ENV'] = process.env['NODE_ENV'] ?? 'test'
 process.env.SESSION_SECRET =
   process.env.SESSION_SECRET ?? 'segredo-de-teste-com-mais-de-32-caracteres-ok'
 process.env.DATABASE_URL =

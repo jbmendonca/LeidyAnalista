@@ -114,7 +114,10 @@ describe('proporMapeamento sobre o arquivo de referência', () => {
   })
 
   it('identifica as doze habilidades H01..H12', () => {
-    const esperadas = Array.from({ length: 12 }, (_, i) => `H${String(i + 1).padStart(2, '0')}`)
+    const esperadas = Array.from(
+      { length: 12 },
+      (_, i) => `H${String(i + 1).padStart(2, '0')}`,
+    )
 
     expect(Object.keys(habilidades)).toEqual(esperadas)
     expect(habilidades['H01']).toBe(10)
@@ -123,6 +126,66 @@ describe('proporMapeamento sobre o arquivo de referência', () => {
 
   it('não deixa nenhuma coluna sem reconhecimento', () => {
     expect(naoMapeadas).toEqual([])
+  })
+})
+
+/**
+ * A planilha equivalente é montada em memória a partir das mesmas linhas do CSV: o objetivo é
+ * provar que o resto do pipeline não distingue a origem.
+ */
+function planilhaDeReferencia(abas: readonly string[]): Buffer {
+  const { cabecalhos, linhas } = lerCsv(BUFFER)
+  const pasta = XLSX.utils.book_new()
+
+  abas.forEach((nome, i) => {
+    const matriz: string[][] =
+      i === 0 ? [[...cabecalhos], ...linhas.map((l) => [...l])] : [['Outra aba']]
+    XLSX.utils.book_append_sheet(pasta, XLSX.utils.aoa_to_sheet(matriz), nome)
+  })
+
+  return XLSX.write(pasta, { type: 'buffer', bookType: 'xlsx' }) as Buffer
+}
+
+describe('lerPlanilha', () => {
+  const buffer = planilhaDeReferencia(['Resultados', 'Notas'])
+
+  it('lê a primeira aba por padrão e lista as disponíveis', () => {
+    const tabela = lerPlanilha(buffer)
+
+    expect(tabela.abaUsada).toBe('Resultados')
+    expect(tabela.abasDisponiveis).toEqual(['Resultados', 'Notas'])
+    expect(tabela.cabecalhos).toHaveLength(22)
+    expect(tabela.linhas).toHaveLength(111)
+  })
+
+  it('preserva espaços das extremidades e acentos vindos da planilha', () => {
+    const tabela = lerPlanilha(buffer)
+    const iTurma = tabela.cabecalhos.indexOf('Código da Turma')
+
+    expect(tabela.cabecalhos[0]).toBe('Rede')
+    expect(tabela.linhas[0]?.[iTurma]).toBe(' 8npu2dd9128c ')
+    expect(tabela.cabecalhos).toContain('Nível de aprendizagem')
+  })
+
+  it('lê a aba pedida quando informada', () => {
+    expect(lerPlanilha(buffer, { aba: 'Notas' }).cabecalhos).toEqual(['Outra aba'])
+  })
+
+  it('recusa aba inexistente com ENTRADA_INVALIDA', () => {
+    try {
+      lerPlanilha(buffer, { aba: 'Inexistente' })
+      expect.unreachable('deveria ter lançado')
+    } catch (erro) {
+      expect((erro as { codigo?: string }).codigo).toBe('ENTRADA_INVALIDA')
+    }
+  })
+
+  it('é reconhecida pela assinatura PK mesmo com nome enganoso', () => {
+    expect(detectarFormato('planilha.csv', buffer)).toBe('xlsx')
+
+    const tabela = lerArquivo(buffer, 'resultados.xlsx')
+    expect(tabela.abaUsada).toBe('Resultados')
+    expect(tabela.linhas).toHaveLength(111)
   })
 })
 

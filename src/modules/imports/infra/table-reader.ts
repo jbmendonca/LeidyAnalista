@@ -81,9 +81,13 @@ export function lerPlanilha(buffer: Buffer, opcoes?: OpcoesPlanilha): TabelaLida
 
   const planilha = pasta.Sheets[abaUsada]
   if (planilha === undefined) {
-    throw new AppError('ENTRADA_INVALIDA', `A aba "${abaUsada}" não existe na planilha.`, {
-      aba: [`Abas disponíveis: ${abasDisponiveis.join(', ')}`],
-    })
+    throw new AppError(
+      'ENTRADA_INVALIDA',
+      `A aba "${abaUsada}" não existe na planilha.`,
+      {
+        aba: [`Abas disponíveis: ${abasDisponiveis.join(', ')}`],
+      },
+    )
   }
 
   const matriz = XLSX.utils.sheet_to_json<unknown[]>(planilha, {

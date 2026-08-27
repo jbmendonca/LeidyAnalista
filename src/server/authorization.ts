@@ -84,11 +84,13 @@ export function assertSchoolInScope(ctx: AuthContext, schoolId: string): string 
 export function schoolScopeFilter(
   ctx: AuthContext,
   schoolId?: string | null,
-): { in: readonly string[] } {
+): { in: string[] } {
   if (schoolId) {
     return { in: [assertSchoolInScope(ctx, schoolId)] }
   }
-  return { in: ctx.allowedSchoolIds }
+  // Cópia mutável: o Prisma exige `string[]`, e devolver o array interno
+  // permitiria que um chamador alterasse o escopo do contexto por engano.
+  return { in: [...ctx.allowedSchoolIds] }
 }
 
 /** Escopo vazio significa nada a mostrar — e não "mostrar tudo". */

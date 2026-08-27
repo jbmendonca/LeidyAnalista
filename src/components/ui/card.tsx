@@ -6,21 +6,22 @@ import { cn } from '@/lib/utils'
  * Cartão de superfície. `data-cartao` existe para a folha de impressão, que evita quebrar
  * um cartão ao meio entre duas páginas.
  */
-export const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  function Card({ className, ...props }, ref) {
-    return (
-      <div
-        ref={ref}
-        data-cartao=""
-        className={cn(
-          'rounded-md border border-borda bg-superficie shadow-cartao',
-          className,
-        )}
-        {...props}
-      />
-    )
-  },
-)
+export const Card = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(function Card({ className, ...props }, ref) {
+  return (
+    <div
+      ref={ref}
+      data-cartao=""
+      className={cn(
+        'rounded-md border border-borda bg-superficie shadow-cartao',
+        className,
+      )}
+      {...props}
+    />
+  )
+})
 
 export const CardHeader = React.forwardRef<
   HTMLDivElement,

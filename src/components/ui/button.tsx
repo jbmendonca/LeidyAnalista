@@ -53,17 +53,18 @@ export type PropsBotao = React.ButtonHTMLAttributes<HTMLButtonElement> &
  * Botão base. `type` é `button` por padrão de propósito: o padrão do HTML é `submit`, e um
  * botão auxiliar dentro de formulário acabaria enviando dados sem que ninguém pedisse.
  */
-export const Button = React.forwardRef<HTMLButtonElement, PropsBotao>(
-  function Button({ className, variante, tamanho, largura, type, ...props }, ref) {
-    return (
-      <button
-        ref={ref}
-        type={type ?? 'button'}
-        className={cn(variantesBotao({ variante, tamanho, largura }), className)}
-        {...props}
-      />
-    )
-  },
-)
+export const Button = React.forwardRef<HTMLButtonElement, PropsBotao>(function Button(
+  { className, variante, tamanho, largura, type, ...props },
+  ref,
+) {
+  return (
+    <button
+      ref={ref}
+      type={type ?? 'button'}
+      className={cn(variantesBotao({ variante, tamanho, largura }), className)}
+      {...props}
+    />
+  )
+})
 
 export { variantesBotao }

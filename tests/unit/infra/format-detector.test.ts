@@ -1,9 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import {
-  detectarFormato,
-  validarExtensao,
-} from '@/modules/imports/infra/format-detector'
+import { detectarFormato, validarExtensao } from '@/modules/imports/infra/format-detector'
 
 const ZIP = Buffer.from([0x50, 0x4b, 0x03, 0x04, 0x14, 0x00])
 const OLE2 = Buffer.from([0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1, 0x00])
