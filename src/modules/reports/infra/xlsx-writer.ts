@@ -69,9 +69,7 @@ function abaDoCabecalho(relatorio: RelatorioMontado): XLSX.WorkSheet {
   return aba
 }
 
-function abaDaSecao(
-  secao: RelatorioMontado['secoes'][number],
-): XLSX.WorkSheet {
+function abaDaSecao(secao: RelatorioMontado['secoes'][number]): XLSX.WorkSheet {
   const linhas: ValorDeCelula[][] = [[secao.titulo]]
   if (secao.descricao !== null) linhas.push([secao.descricao])
   linhas.push([])
@@ -99,7 +97,11 @@ export function gerarXlsxDoRelatorio(relatorio: RelatorioMontado): Buffer {
 
   const nomes = nomesUnicos(relatorio.secoes.map((s) => s.titulo))
   relatorio.secoes.forEach((secao, indice) => {
-    XLSX.utils.book_append_sheet(livro, abaDaSecao(secao), nomes[indice] ?? `Seção ${indice + 1}`)
+    XLSX.utils.book_append_sheet(
+      livro,
+      abaDaSecao(secao),
+      nomes[indice] ?? `Seção ${indice + 1}`,
+    )
   })
 
   const conteudo: unknown = XLSX.write(livro, { type: 'buffer', bookType: 'xlsx' })

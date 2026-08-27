@@ -68,7 +68,9 @@ import type { EscopoRelatorio } from './report-scope'
  * A única seção cujo denominador inclui os não avaliados. É a contrapartida exata da
  * regra que os mantém fora de todo o resto (Const. V).
  */
-export async function secaoParticipacao(escopo: EscopoRelatorio): Promise<SecaoRelatorio> {
+export async function secaoParticipacao(
+  escopo: EscopoRelatorio,
+): Promise<SecaoRelatorio> {
   const { total, avaliados, naoAvaliados } = await contarParticipacao(
     escopo.ctx,
     escopo.filtros,
@@ -107,7 +109,9 @@ const ROTULO_NIVEL = {
  * produz, infere ou corrige (Const. III). As faixas analíticas são outra coisa, com outro
  * nome, e aparecem nas seções de habilidade.
  */
-export async function secaoDistribuicao(escopo: EscopoRelatorio): Promise<SecaoRelatorio> {
+export async function secaoDistribuicao(
+  escopo: EscopoRelatorio,
+): Promise<SecaoRelatorio> {
   const d = await distribuicaoPorNivel(escopo.ctx, escopo.filtros)
 
   const linha = (rotulo: string, quantidade: number): readonly Celula[] => [
@@ -148,7 +152,10 @@ export async function secaoDesempenho(escopo: EscopoRelatorio): Promise<SecaoRel
     descricao: 'Cálculo: soma dos acertos dividida pela soma dos itens possíveis.',
     colunas: COLUNAS_RESUMO,
     linhas: [
-      linhaResumo('Soma dos acertos', celulaInteiro(geral === null ? null : geral.acertos)),
+      linhaResumo(
+        'Soma dos acertos',
+        celulaInteiro(geral === null ? null : geral.acertos),
+      ),
       linhaResumo(
         'Soma dos itens possíveis',
         celulaInteiro(geral === null ? null : geral.itens),
@@ -355,22 +362,20 @@ export async function secaoComparacaoTurmas(
 ): Promise<SecaoRelatorio> {
   const turmas = await turmasDoRecorte(escopo)
 
-  const linhas = turmas.map(
-    (t): readonly Celula[] => [
-      celulaTexto(t.nome),
-      celulaTexto(t.externalCode),
-      celulaTexto(t.escolaNome),
-      celulaTexto(t.anoEscolar),
-      celulaInteiro(t.total),
-      celulaInteiro(t.avaliados),
-      celulaInteiro(t.naoAvaliados),
-      celulaInteiro(t.desempenho === null ? null : t.desempenho.acertos),
-      celulaInteiro(t.desempenho === null ? null : t.desempenho.itens),
-      celulaPercentual(t.desempenho),
-      celulaInteiro(t.defasagem),
-      celulaPercentual(fracaoOuAusencia(t.defasagem, t.avaliados)),
-    ],
-  )
+  const linhas = turmas.map((t): readonly Celula[] => [
+    celulaTexto(t.nome),
+    celulaTexto(t.externalCode),
+    celulaTexto(t.escolaNome),
+    celulaTexto(t.anoEscolar),
+    celulaInteiro(t.total),
+    celulaInteiro(t.avaliados),
+    celulaInteiro(t.naoAvaliados),
+    celulaInteiro(t.desempenho === null ? null : t.desempenho.acertos),
+    celulaInteiro(t.desempenho === null ? null : t.desempenho.itens),
+    celulaPercentual(t.desempenho),
+    celulaInteiro(t.defasagem),
+    celulaPercentual(fracaoOuAusencia(t.defasagem, t.avaliados)),
+  ])
 
   return secao({
     id: 'turmas',

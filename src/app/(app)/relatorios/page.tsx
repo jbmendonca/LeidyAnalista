@@ -230,13 +230,19 @@ export default async function PaginaRelatorios({
                     <div className="flex flex-wrap gap-2">
                       <a
                         href={`/api/reports/${tipo}/csv${sufixo}`}
-                        className={variantesBotao({ variante: 'secundario', tamanho: 'pequeno' })}
+                        className={variantesBotao({
+                          variante: 'secundario',
+                          tamanho: 'pequeno',
+                        })}
                       >
                         CSV
                       </a>
                       <a
                         href={`/api/reports/${tipo}/xlsx${sufixo}`}
-                        className={variantesBotao({ variante: 'secundario', tamanho: 'pequeno' })}
+                        className={variantesBotao({
+                          variante: 'secundario',
+                          tamanho: 'pequeno',
+                        })}
                       >
                         Planilha
                       </a>

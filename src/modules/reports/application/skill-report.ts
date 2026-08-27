@@ -125,19 +125,21 @@ async function secaoTurmas(escopo: EscopoRelatorio): Promise<SecaoRelatorio> {
     }),
   )
 
-  const linhas = porTurma.map(({ turma, resultado, estudantesComResultado }): readonly Celula[] => {
-    const faixa = classifyAnalyticalSkillResult(resultado, escopo.faixas.bands)
-    return [
-      celulaTexto(turma.nome),
-      celulaTexto(turma.externalCode),
-      celulaTexto(turma.escolaNome),
-      celulaInteiro(estudantesComResultado),
-      celulaInteiro(resultado === null ? null : resultado.acertos),
-      celulaInteiro(resultado === null ? null : resultado.itens),
-      celulaPercentual(resultado),
-      faixa === null ? CELULA_AUSENTE : celulaTexto(ROTULO_FAIXA[faixa]),
-    ]
-  })
+  const linhas = porTurma.map(
+    ({ turma, resultado, estudantesComResultado }): readonly Celula[] => {
+      const faixa = classifyAnalyticalSkillResult(resultado, escopo.faixas.bands)
+      return [
+        celulaTexto(turma.nome),
+        celulaTexto(turma.externalCode),
+        celulaTexto(turma.escolaNome),
+        celulaInteiro(estudantesComResultado),
+        celulaInteiro(resultado === null ? null : resultado.acertos),
+        celulaInteiro(resultado === null ? null : resultado.itens),
+        celulaPercentual(resultado),
+        faixa === null ? CELULA_AUSENTE : celulaTexto(ROTULO_FAIXA[faixa]),
+      ]
+    },
+  )
 
   return secao({
     id: 'turmas',
@@ -201,14 +203,12 @@ async function secoesDistribuicao(escopo: EscopoRelatorio): Promise<SecaoRelator
       coluna('quantidade', 'Estudantes', true),
       coluna('proporcao', '% dos estudantes', true),
     ],
-    linhas: distribuicao.map(
-      (d): readonly Celula[] => [
-        celulaTexto(`${d.acertos}/${referencia}`),
-        celulaInteiro(d.acertos),
-        celulaInteiro(d.quantidade),
-        celulaPercentual(fracaoOuAusencia(d.quantidade, totalNaDistribuicao)),
-      ],
-    ),
+    linhas: distribuicao.map((d): readonly Celula[] => [
+      celulaTexto(`${d.acertos}/${referencia}`),
+      celulaInteiro(d.acertos),
+      celulaInteiro(d.quantidade),
+      celulaPercentual(fracaoOuAusencia(d.quantidade, totalNaDistribuicao)),
+    ]),
     nota: 'As faixas sem ocorrência aparecem com 0 estudantes — este zero é contagem, não ausência.',
   })
 
@@ -225,14 +225,12 @@ async function secoesDistribuicao(escopo: EscopoRelatorio): Promise<SecaoRelator
       coluna('itens', 'Itens possíveis', true),
       coluna('quantidade', 'Estudantes', true),
     ],
-    linhas: divergentes.map(
-      (d): readonly Celula[] => [
-        celulaTexto(`${d.acertos}/${d.itens}`),
-        celulaInteiro(d.acertos),
-        celulaInteiro(d.itens),
-        celulaInteiro(d.quantidade),
-      ],
-    ),
+    linhas: divergentes.map((d): readonly Celula[] => [
+      celulaTexto(`${d.acertos}/${d.itens}`),
+      celulaInteiro(d.acertos),
+      celulaInteiro(d.itens),
+      celulaInteiro(d.quantidade),
+    ]),
     nota: 'Não entram na distribuição acima nem são convertidos para o denominador de referência.',
   })
 

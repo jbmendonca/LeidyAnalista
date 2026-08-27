@@ -53,7 +53,10 @@ function secaoResumo(escopo: EscopoRelatorio): SecaoRelatorio {
       linhaResumo('Escola', celulaTexto(escola.name)),
       linhaResumo('Código', celulaTexto(escola.code)),
       linhaResumo('Rede', celulaTexto(escola.rede)),
-      linhaResumo('Município / Estado', celulaTexto(`${escola.municipio}/${escola.estado}`)),
+      linhaResumo(
+        'Município / Estado',
+        celulaTexto(`${escola.municipio}/${escola.estado}`),
+      ),
       linhaResumo('Turmas cadastradas', celulaInteiro(escola.totalTurmas)),
       linhaResumo('Estudantes cadastrados', celulaInteiro(escola.totalEstudantes)),
     ],

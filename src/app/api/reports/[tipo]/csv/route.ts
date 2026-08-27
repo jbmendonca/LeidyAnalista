@@ -6,10 +6,7 @@ import {
   montarRelatorio,
   registrarExportacaoDeRelatorio,
 } from '@/modules/reports/application/report-scope'
-import {
-  gerarCsvDoRelatorio,
-  nomeDoArquivoCsv,
-} from '@/modules/reports/infra/csv-writer'
+import { gerarCsvDoRelatorio, nomeDoArquivoCsv } from '@/modules/reports/infra/csv-writer'
 
 /**
  * Exportação do relatório em CSV — FR-103, FR-104.

@@ -560,7 +560,10 @@ export async function listarOpcoesDeRelatorio(
     ? await prisma.assessmentSkill.findMany({
         where: { assessmentId: recorte.assessmentId },
         orderBy: { skill: { ordem: 'asc' } },
-        select: { skillId: true, skill: { select: { shortCode: true, descricao: true } } },
+        select: {
+          skillId: true,
+          skill: { select: { shortCode: true, descricao: true } },
+        },
       })
     : []
 

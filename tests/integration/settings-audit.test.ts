@@ -426,8 +426,20 @@ afterAll(async () => {
   await prisma.assessment.deleteMany({ where: { id: { in: criados.assessmentIds } } })
   await prisma.skill.deleteMany({ where: { id: { in: criados.skillIds } } })
   // Antes dos usuários: `AnalyticalSettings.createdByUserId` referencia `User`.
+  //
+  // Apaga por AUTOR, não por id coletado. `AnalyticalSettings` é uma tabela
+  // global — a versão vigente é lida por todo o sistema —, e uma versão que
+  // escape daqui muda as faixas analíticas para os outros arquivos de teste,
+  // que passam a classificar de forma diferente sem nenhum motivo aparente.
+  // Confiar num array de ids exige que toda criação lembre de registrar o id;
+  // filtrar pelo autor não depende dessa disciplina.
   await prisma.analyticalSettings.deleteMany({
-    where: { id: { in: criados.settingsIds } },
+    where: {
+      OR: [
+        { id: { in: criados.settingsIds } },
+        { createdByUserId: { in: criados.userIds } },
+      ],
+    },
   })
   await prisma.auditLog.deleteMany({ where: { userId: { in: criados.userIds } } })
   await prisma.userSchool.deleteMany({ where: { userId: { in: criados.userIds } } })

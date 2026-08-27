@@ -307,17 +307,17 @@ T001 a T188 seguem a ordem de execução. **T189 a T196 foram acrescentadas em 2
 
 **Propósito**: início da **US4 (P2)**.
 
-- [ ] T113 [US4] Implementar o resumo da turma em `src/app/(app)/turmas/[classId]/page.tsx`
+- [X] T113 [US4] Implementar o resumo da turma em `src/app/(app)/turmas/[classId]/page.tsx`
   - ✓ escola, turma, código, ano escolar e componente (FR-077)
-- [ ] T114 [US4] Implementar participação e percentual geral da turma em `src/app/(app)/turmas/[classId]/page.tsx` (FR-078)
-- [ ] T115 [US4] Implementar a distribuição por nível e as habilidades extremas da turma em `src/app/(app)/turmas/[classId]/page.tsx` (FR-079)
-- [ ] T116 [US4] Implementar a tabela de habilidades da turma em `src/components/data/class-skills-table.tsx` (FR-080)
+- [X] T114 [US4] Implementar participação e percentual geral da turma em `src/app/(app)/turmas/[classId]/page.tsx` (FR-078)
+- [X] T115 [US4] Implementar a distribuição por nível e as habilidades extremas da turma em `src/app/(app)/turmas/[classId]/page.tsx` (FR-079)
+- [X] T116 [US4] Implementar a tabela de habilidades da turma em `src/components/data/class-skills-table.tsx` (FR-080)
   - ✓ ordenação padrão da maior fragilidade para o melhor desempenho
-- [ ] T117 [US4] Implementar a tabela de estudantes da turma em `src/components/data/student-table.tsx`
+- [X] T117 [US4] Implementar a tabela de estudantes da turma em `src/components/data/student-table.tsx`
   - ✓ colunas de FR-081; ordenável e filtrável
-- [ ] T118 [US4] Implementar a ordenação por prioridade pedagógica em `src/modules/analytics/domain/student-priority.ts`
+- [X] T118 [US4] Implementar a ordenação por prioridade pedagógica em `src/modules/analytics/domain/student-priority.ts`
   - ✓ Defasagem → Intermediário → Adequado → **não avaliados em lista própria**; dentro do grupo, menor percentual primeiro (FR-082)
-- [ ] T119 [US4] Teste de componente da tabela em `tests/unit/components/student-table.test.tsx`
+- [X] T119 [US4] Teste de componente da tabela em `tests/unit/components/student-table.test.tsx`
   - ✓ não avaliado exibe travessão, não `0`, e não aparece entre os de Defasagem (FR-093)
 
 ---
@@ -342,32 +342,32 @@ T001 a T188 seguem a ordem de execução. **T189 a T196 foram acrescentadas em 2
 
 ## FASE 11 — FICHA DO ESTUDANTE
 
-- [ ] T126 [US4] Implementar a identificação na ficha em `src/app/(app)/estudantes/[studentId]/page.tsx`
+- [X] T126 [US4] Implementar a identificação na ficha em `src/app/(app)/estudantes/[studentId]/page.tsx`
   - ✓ nome, escola, turma, código da turma, ano escolar e `uniqueCode` (FR-088, FR-132)
-- [ ] T127 [US4] Implementar participação e `Nível de aprendizagem` **original** (FR-089)
+- [X] T127 [US4] Implementar participação e `Nível de aprendizagem` **original** (FR-089)
   - ✓ valor da fonte, sem qualquer substituição (Const. III)
-- [ ] T128 [US4] Implementar acertos totais, itens possíveis e percentual geral em `src/app/(app)/estudantes/[studentId]/page.tsx` (FR-090)
-- [ ] T129 [US4] Implementar o detalhamento H01:H12 em `src/components/data/student-skills-table.tsx`
+- [X] T128 [US4] Implementar acertos totais, itens possíveis e percentual geral em `src/app/(app)/estudantes/[studentId]/page.tsx` (FR-090)
+- [X] T129 [US4] Implementar o detalhamento H01:H12 em `src/components/data/student-skills-table.tsx`
   - ✓ resultado original (`1 / 2`) ao lado do percentual (`50%`) (FR-091, FR-127)
-- [ ] T130 [US4] Implementar as contagens de fragilidade e atenção com rótulo de critério analítico em `src/components/data/analytical-band-summary.tsx` (FR-092)
+- [X] T130 [US4] Implementar as contagens de fragilidade e atenção com rótulo de critério analítico em `src/components/data/analytical-band-summary.tsx` (FR-092)
   - ✓ visual e conceitualmente distinto do `Nível de aprendizagem` (FR-112)
 
 ---
 
 ## FASE 12 — MAPA DE CALOR
 
-- [ ] T131 [US4] Implementar a matriz estudante × habilidade em `src/components/data/heatmap.tsx`
+- [X] T131 [US4] Implementar a matriz estudante × habilidade em `src/components/data/heatmap.tsx`
   - ✓ marcação `<table>` semântica (FR-094)
-- [ ] T132 [US4] Implementar o detalhe de célula em `src/components/data/heatmap-cell.tsx`
+- [X] T132 [US4] Implementar o detalhe de célula em `src/components/data/heatmap-cell.tsx`
   - ✓ código, resultado original, percentual e descrição da habilidade (FR-095)
-- [ ] T133 [US4] Implementar a paleta por faixa analítica com WCAG 2.1 AA em `src/components/data/heatmap-palette.ts`
+- [X] T133 [US4] Implementar a paleta por faixa analítica com WCAG 2.1 AA em `src/components/data/heatmap-palette.ts`
   - ✓ contraste ≥ 4,5:1; valor numérico sempre visível ou acessível — **cor nunca é o único portador** (FR-096)
-- [ ] T134 [US4] Distinguir visualmente célula sem resultado de célula com resultado zero em `src/components/data/heatmap-cell.tsx` (FR-097)
-- [ ] T135 [US4] Implementar virtualização com TanStack Virtual acima de 60 estudantes em `src/components/data/heatmap.tsx` (R-010)
+- [X] T134 [US4] Distinguir visualmente célula sem resultado de célula com resultado zero em `src/components/data/heatmap-cell.tsx` (FR-097)
+- [X] T135 [US4] Implementar virtualização com TanStack Virtual acima de 60 estudantes em `src/components/data/heatmap.tsx` (R-010)
   - ✓ abaixo do limiar, sem virtualização; versão de impressão nunca virtualizada
-- [ ] T192 [US4] Implementar o layout responsivo das telas de análise em `src/app/(app)/` e `src/components/data/` (FR-123, Const. VIII)
+- [X] T192 [US4] Implementar o layout responsivo das telas de análise em `src/app/(app)/` e `src/components/data/` (FR-123, Const. VIII)
   - ✓ tabelas largas rolam no próprio contêiner sem rolagem horizontal da página; nenhum indicador fica inacessível em 375 px de largura
-- [ ] T136 [US4] Teste de acessibilidade do mapa de calor em `tests/e2e/heatmap-a11y.spec.ts`
+- [X] T136 [US4] Teste de acessibilidade do mapa de calor em `tests/e2e/heatmap-a11y.spec.ts`
   - ✓ navegação por teclado; leitor de tela alcança o valor de cada célula
 
 **Checkpoint**: US4 e US5 completas.
@@ -419,18 +419,18 @@ T001 a T188 seguem a ordem de execução. **T189 a T196 foram acrescentadas em 2
 
 **Propósito**: **US8 e US9 (P3)**.
 
-- [ ] T155 [US8] Implementar a criação de nova versão de `AnalyticalSettings` em `src/modules/settings/application/create-version.ts`
+- [X] T155 [US8] Implementar a criação de nova versão de `AnalyticalSettings` em `src/modules/settings/application/create-version.ts`
   - ✓ nunca faz `UPDATE`; sempre insere versão nova (FR-163)
-- [ ] T156 [US8] Implementar a tela de configuração dos critérios em `src/app/(app)/configuracoes/page.tsx`
+- [X] T156 [US8] Implementar a tela de configuração dos critérios em `src/app/(app)/configuracoes/page.tsx`
   - ✓ faixas e definição de baixo rendimento editáveis (FR-109, FR-110)
-- [ ] T157 [US8] Implementar a consulta do histórico de versões em `src/app/(app)/configuracoes/historico/page.tsx` (FR-165)
-- [ ] T158 [US8] Verificar que alterar faixas recalcula a leitura analítica sem tocar em valor original nem em `LearningLevel` (FR-113, FR-164)
+- [X] T157 [US8] Implementar a consulta do histórico de versões em `src/app/(app)/configuracoes/historico/page.tsx` (FR-165)
+- [X] T158 [US8] Verificar que alterar faixas recalcula a leitura analítica sem tocar em valor original nem em `LearningLevel` (FR-113, FR-164)
   - ✓ teste compara o dump integral de resultados antes e depois — deve ser idêntico
-- [ ] T159 [P] [US9] Implementar o repositório de `AuditLog` em `src/modules/audit/infra/audit-repository.ts`
+- [X] T159 [P] [US9] Implementar o repositório de `AuditLog` em `src/modules/audit/infra/audit-repository.ts`
   - ✓ referencia por identificador; **sem campo de nome**; sem rota de alteração ou remoção (FR-120)
-- [ ] T160 [US9] Gravar `AuditLog` na mesma transação de toda mutação sensível (FR-117)
-- [ ] T161 [US9] Implementar a tela de auditoria (ADMIN) em `src/app/(app)/auditoria/page.tsx`
-- [ ] T162 [US9] Implementar o reprocessamento de indicadores em `src/modules/results/application/reprocess.ts`
+- [X] T160 [US9] Gravar `AuditLog` na mesma transação de toda mutação sensível (FR-117)
+- [X] T161 [US9] Implementar a tela de auditoria (ADMIN) em `src/app/(app)/auditoria/page.tsx`
+- [X] T162 [US9] Implementar o reprocessamento de indicadores em `src/modules/results/application/reprocess.ts`
   - ✓ recalcula derivados a partir de `acertos` e `itens` armazenados; não altera nenhum valor original (FR-119)
 
 ---
@@ -443,20 +443,20 @@ T001 a T188 seguem a ordem de execução. **T189 a T196 foram acrescentadas em 2
   - ✓ cada entrada tem linha na matriz de autorização de T032
 - [ ] T164 [US3] Auditar o isolamento por escola em telas, filtros, buscas, contagens e mensagens de erro, em `tests/integration/school-isolation.test.ts`
   - ✓ nenhuma revela existência de escola não autorizada; 404, nunca 403 (SC-009)
-- [ ] T165 [US3] Auditar ausência de PII em logs de aplicação e em `AuditLog`
+- [X] T165 [US3] Auditar ausência de PII em logs de aplicação e em `AuditLog`
   - ✓ varredura automatizada de campos nominais em `tests/integration/pii-guard.test.ts` (FR-009)
 - [ ] T166 [US3] Auditar o acesso a relatórios nominais nos cinco tipos em `tests/integration/nominal-reports.test.ts` (FR-105)
-- [ ] T167 [US1] Endurecer a validação de upload em `src/app/api/imports/route.ts`
+- [X] T167 [US1] Endurecer a validação de upload em `src/app/api/imports/route.ts`
   - ✓ extensão, MIME, assinatura de conteúdo e limite de tamanho; arquivo fora do padrão rejeitado antes de qualquer parsing
-- [ ] T168 [US1] Restringir permissões do diretório `IMPORT_STORAGE_DIR`
+- [X] T168 [US1] Restringir permissões do diretório `IMPORT_STORAGE_DIR`
   - ✓ mesmas restrições de acesso do banco (R-006)
-- [ ] T195 Implementar a expiração automática do arquivo original em `src/modules/imports/application/purge-expired-files.ts` (FR-038a a FR-038c)
+- [X] T195 Implementar a expiração automática do arquivo original em `src/modules/imports/application/purge-expired-files.ts` (FR-038a a FR-038c)
   - ✓ prazo configurável por `IMPORT_FILE_RETENTION_DAYS` (padrão 90); exclui o arquivo, zera `storagePath`, grava `filePurgedAt`; hash, contagens e auditoria permanecem
-- [ ] T196 Implementar a exclusão antecipada do arquivo pelo Administrador em `src/modules/imports/application/purge-file.ts` (FR-038c)
+- [X] T196 Implementar a exclusão antecipada do arquivo pelo Administrador em `src/modules/imports/application/purge-file.ts` (FR-038c)
   - ✓ ação registrada em auditoria; os resultados já importados não são afetados
-- [ ] T169 Documentar a política de retenção do arquivo original em `README.md` (FR-038a a FR-038c)
+- [X] T169 Documentar a política de retenção do arquivo original em `README.md` (FR-038a a FR-038c)
   - ✓ prazo padrão, variável de configuração e o que permanece após a exclusão; registra que os 90 dias são padrão técnico, não parecer jurídico
-- [ ] T170 [US3] Teste E2E de tentativa de escalada de privilégio em `tests/e2e/privilege-escalation.spec.ts`
+- [X] T170 [US3] Teste E2E de tentativa de escalada de privilégio em `tests/e2e/privilege-escalation.spec.ts`
   - ✓ manipulação de URL e de parâmetro por usuário ESCOLA não alcança dado de outra escola
 
 ---
@@ -476,14 +476,14 @@ T001 a T188 seguem a ordem de execução. **T189 a T196 foram acrescentadas em 2
   - ✓ 111 / 106 / 5 / 4 / 12; distribuição 96 / 7 / 3; ranking do PRD §38.1 com tolerância de 0,01 p.p.
 - [X] T177 Verificar a integridade da fixture por SHA-256 do conteúdo numérico em `tests/regression/fixture-integrity.test.ts`
   - ✓ alteração acidental dos números é detectada
-- [ ] T178 Escrever os testes E2E dos sete cenários do [quickstart](quickstart.md) em `tests/e2e/`
+- [X] T178 Escrever os testes E2E dos sete cenários do [quickstart](quickstart.md) em `tests/e2e/`
 - [X] T193 Escrever o teste de responsividade em `tests/e2e/responsive.spec.ts` (FR-123, SC — Const. VIII)
   - ✓ percorre dashboard geral, turma, ficha e mapa de calor em 375 px, 768 px e 1280 px sem rolagem horizontal da página
 - [X] T194 Escrever o teste da permissão de dados nominais em `tests/integration/nominal-permission.test.ts` (FR-007, FR-007a)
   - ✓ usuário sem a permissão recebe agregado em todas as telas e nos cinco relatórios; a resposta do servidor não contém nome algum
 - [X] T179 Configurar o portão de integração em `.github/workflows/ci.yml`
   - ✓ `lint`, `typecheck`, `test`, `test:regression` e `build` bloqueiam a integração em caso de falha (Const. V e X; fecha a lacuna CHK060)
-- [ ] T180 Verificar a cobertura das funções de domínio em `vitest.config.ts` (limiar por diretório)
+- [X] T180 Verificar a cobertura das funções de domínio em `vitest.config.ts` (limiar por diretório)
   - ✓ as nove funções do contrato com 100% de linhas e ramos
 
 ---

@@ -213,9 +213,7 @@ function secaoFragilidades(
   const comResultado = linhas.length - semResultado.length
 
   const codigos = (conjunto: readonly LinhaDeHabilidade[]): string | null =>
-    conjunto.length === 0
-      ? null
-      : conjunto.map((l) => l.habilidade.shortCode).join(', ')
+    conjunto.length === 0 ? null : conjunto.map((l) => l.habilidade.shortCode).join(', ')
 
   return secao({
     id: 'fragilidades',
@@ -231,13 +229,22 @@ function secaoFragilidades(
         `Habilidades em ${ROTULO_FAIXA.FRAGILIDADE}`,
         celulaInteiro(fragilidade.length),
       ),
-      linhaResumo(`Habilidades em ${ROTULO_FAIXA.ATENCAO}`, celulaInteiro(atencao.length)),
+      linhaResumo(
+        `Habilidades em ${ROTULO_FAIXA.ATENCAO}`,
+        celulaInteiro(atencao.length),
+      ),
       linhaResumo(
         `Habilidades em ${ROTULO_FAIXA.SATISFATORIO}`,
         celulaInteiro(satisfatorio.length),
       ),
-      linhaResumo('Habilidades sem resultado na fonte', celulaInteiro(semResultado.length)),
-      linhaResumo(`Códigos em ${ROTULO_FAIXA.FRAGILIDADE}`, celulaTexto(codigos(fragilidade))),
+      linhaResumo(
+        'Habilidades sem resultado na fonte',
+        celulaInteiro(semResultado.length),
+      ),
+      linhaResumo(
+        `Códigos em ${ROTULO_FAIXA.FRAGILIDADE}`,
+        celulaTexto(codigos(fragilidade)),
+      ),
       linhaResumo(`Códigos em ${ROTULO_FAIXA.ATENCAO}`, celulaTexto(codigos(atencao))),
     ],
     nota:

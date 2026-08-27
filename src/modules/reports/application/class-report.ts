@@ -82,17 +82,15 @@ async function secaoEstudantes(escopo: EscopoRelatorio): Promise<SecaoRelatorio>
     ordenarPorPrioridade: true,
   })
 
-  const linhas = estudantes.map(
-    (e): readonly Celula[] => [
-      celulaTexto(e.uniqueCode),
-      celulaTexto(e.nomeOriginal),
-      celulaTexto(e.avaliado ? 'Sim' : 'Não'),
-      celulaTexto(e.nivelOriginal),
-      celulaInteiro(e.acertos),
-      celulaInteiro(e.itens),
-      celulaPercentual(e.performance),
-    ],
-  )
+  const linhas = estudantes.map((e): readonly Celula[] => [
+    celulaTexto(e.uniqueCode),
+    celulaTexto(e.nomeOriginal),
+    celulaTexto(e.avaliado ? 'Sim' : 'Não'),
+    celulaTexto(e.nivelOriginal),
+    celulaInteiro(e.acertos),
+    celulaInteiro(e.itens),
+    celulaPercentual(e.performance),
+  ])
 
   const naoAvaliados = estudantes.filter((e) => !e.avaliado).length
 

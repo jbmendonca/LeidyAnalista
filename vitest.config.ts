@@ -16,6 +16,21 @@ export default defineConfig({
     include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx'],
     environmentMatchGlobs: [['tests/unit/components/**', 'jsdom']],
     setupFiles: ['./tests/setup.ts'],
+
+    /**
+     * Arquivos de teste em série, não em paralelo.
+     *
+     * Os testes de integração compartilham **um** banco, e parte do estado é
+     * global por natureza: `AnalyticalSettings` é uma configuração única do
+     * sistema, e `Skill` é um catálogo. Um arquivo que cria uma versão nova de
+     * critérios muda as faixas que outro está lendo no mesmo instante — e a
+     * falha aparece como classificação errada num teste que não tem nada a ver
+     * com configuração, o que é caro de diagnosticar.
+     *
+     * A suíte inteira roda em poucos segundos; o paralelismo aqui compra pouco
+     * e custa instabilidade.
+     */
+    fileParallelism: false,
     coverage: {
       provider: 'v8',
       include: ['src/modules/**/domain/**', 'src/lib/**'],

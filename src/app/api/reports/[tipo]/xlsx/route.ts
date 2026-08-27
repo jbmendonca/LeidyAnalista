@@ -25,8 +25,7 @@ import {
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-const TIPO_XLSX =
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+const TIPO_XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
 export async function GET(
   request: Request,

@@ -65,8 +65,57 @@ let amb: Ambiente
 let ctxAnalista: AuthContext
 let ctxSemNomes: AuthContext
 let ctxEscolaA: AuthContext
-/** Versão de `AnalyticalSettings` criada por este teste, quando o banco não tinha nenhuma. */
-let configuracaoCriada: string | null = null
+
+const EMAIL_PREFIXO = `${PREFIXO.toLowerCase()}-`
+
+/**
+ * Remove tudo o que esta suíte cria, na ordem das dependências.
+ *
+ * Roda **antes e depois**: uma execução interrompida no meio deixa escolas com o código
+ * já tomado, e a corrida seguinte falharia na criação em vez de no que se quer testar.
+ * O recorte é sempre pelo prefixo do teste — nada fora dele é tocado, e a configuração
+ * analítica semeada permanece intacta porque não foi criada por um usuário do teste.
+ */
+async function limparResiduos(): Promise<void> {
+  const escolas = await prisma.school.findMany({
+    where: { code: { startsWith: PREFIXO } },
+    select: { id: true },
+  })
+  const usuarios = await prisma.user.findMany({
+    where: { email: { startsWith: EMAIL_PREFIXO } },
+    select: { id: true },
+  })
+
+  const idsEscola = escolas.map((e) => e.id)
+  const idsUsuario = usuarios.map((u) => u.id)
+
+  if (idsEscola.length > 0) {
+    // `StudentSkillResult` cai por cascata a partir do resultado.
+    await prisma.assessmentStudentResult.deleteMany({
+      where: { schoolId: { in: idsEscola } },
+    })
+    await prisma.import.deleteMany({ where: { schoolId: { in: idsEscola } } })
+    await prisma.student.deleteMany({ where: { schoolId: { in: idsEscola } } })
+    await prisma.class.deleteMany({ where: { schoolId: { in: idsEscola } } })
+  }
+
+  if (idsUsuario.length > 0) {
+    await prisma.auditLog.deleteMany({ where: { userId: { in: idsUsuario } } })
+    await prisma.analyticalSettings.deleteMany({
+      where: { createdByUserId: { in: idsUsuario } },
+    })
+  }
+
+  // `AssessmentSkill` cai por cascata a partir da avaliação.
+  await prisma.assessment.deleteMany({ where: { nome: { startsWith: PREFIXO } } })
+
+  if (idsEscola.length > 0) {
+    await prisma.school.deleteMany({ where: { id: { in: idsEscola } } })
+  }
+  if (idsUsuario.length > 0) {
+    await prisma.user.deleteMany({ where: { id: { in: idsUsuario } } })
+  }
+}
 
 function contexto(
   userId: string,
@@ -79,6 +128,13 @@ function contexto(
     allowedSchoolIds: escolas,
     canAccessNominalData: opcoes?.nominal ?? true,
   }
+}
+
+/** Percentual derivado com `Decimal`, no formato que a coluna `Decimal(7,4)` aceita. */
+function decimalDoPercentual(acertos: number, itens: number): string {
+  const valor = toPercent({ acertos, itens })
+  if (valor === null) throw new Error('Denominador não positivo na fixture.')
+  return valor.toDecimalPlaces(4).toFixed(4)
 }
 
 /** Todas as células de todas as seções, para busca textual. */
@@ -100,6 +156,8 @@ function valorDoResumo(relatorio: RelatorioMontado, id: string, rotulo: string):
 }
 
 beforeAll(async () => {
+  await limparResiduos()
+
   const escolaA = await prisma.school.create({
     data: {
       code: `${PREFIXO}-A`,
@@ -169,7 +227,8 @@ beforeAll(async () => {
       fileName: `${PREFIXO}.csv`,
       fileHash: `${PREFIXO}-hash`,
       fileSize: 1,
-      storagePath: null,
+      // O caminho só é nulo depois do expurgo — invariante do próprio banco (FR-038b).
+      storagePath: `${PREFIXO}/arquivo.csv`,
       fileRetainedUntil: new Date('2027-01-01T00:00:00Z'),
       status: 'COMPLETED',
       userId: uAnalista.id,
@@ -185,14 +244,20 @@ beforeAll(async () => {
   })
   const [s1, s2, s3] = catalogo
   if (!s1 || !s2 || !s3) {
-    throw new Error('Catálogo de habilidades vazio: rode `npm run db:seed` antes dos testes.')
+    throw new Error(
+      'Catálogo de habilidades vazio: rode `npm run db:seed` antes dos testes.',
+    )
   }
+
+  // Fixado fora do fechamento abaixo: a narrowing de `s1`/`s2`/`s3` não sobrevive à
+  // fronteira da função interna.
+  const idsHabilidade: readonly [string, string, string] = [s1.id, s2.id, s3.id]
 
   await prisma.assessmentSkill.createMany({
     data: [
-      { assessmentId: avaliacao.id, skillId: s1.id, referenceItems: 2 },
-      { assessmentId: avaliacao.id, skillId: s2.id, referenceItems: 3 },
-      { assessmentId: avaliacao.id, skillId: s3.id, referenceItems: 2 },
+      { assessmentId: avaliacao.id, skillId: idsHabilidade[0], referenceItems: 2 },
+      { assessmentId: avaliacao.id, skillId: idsHabilidade[1], referenceItems: 3 },
+      { assessmentId: avaliacao.id, skillId: idsHabilidade[2], referenceItems: 2 },
     ],
   })
 
@@ -239,14 +304,19 @@ beforeAll(async () => {
         // Ausência é NULL do começo ao fim — nunca 0 (Const. I).
         acertosTotais: totais?.acertos ?? null,
         itensTotais: totais?.itens ?? null,
+        percentualGeral: totais
+          ? decimalDoPercentual(totais.acertos, totais.itens)
+          : null,
         ...(entrada.habilidades
           ? {
               skillResults: {
                 create: entrada.habilidades.map(([acertos, itens], indice) => ({
-                  skillId: [s1.id, s2.id, s3.id][indice] as string,
+                  skillId: idsHabilidade[indice] ?? idsHabilidade[0],
                   valorOriginal: `${acertos} / ${itens}`,
                   acertos,
                   itensPossiveis: itens,
+                  // O banco exige o percentual junto da fração que o origina.
+                  percentual: decimalDoPercentual(acertos, itens),
                 })),
               },
             }
@@ -319,7 +389,7 @@ beforeAll(async () => {
   // foi semeado, a suíte cria uma versão própria e a remove no fim.
   const existente = await prisma.analyticalSettings.findFirst()
   if (!existente) {
-    const criada = await prisma.analyticalSettings.create({
+    await prisma.analyticalSettings.create({
       data: {
         version: 1,
         fragilidadeMax: '60.00',
@@ -328,7 +398,6 @@ beforeAll(async () => {
         createdByUserId: uAnalista.id,
       },
     })
-    configuracaoCriada = criada.id
   }
 
   amb = {
@@ -355,21 +424,7 @@ beforeAll(async () => {
 }, 60_000)
 
 afterAll(async () => {
-  const escolas = [amb.escolaA, amb.escolaB]
-  const usuarios = [amb.usuarioAnalista, amb.usuarioSemNomes, amb.usuarioEscolaA]
-
-  // `StudentSkillResult` cai por cascata a partir do resultado; `AssessmentSkill`, da avaliação.
-  await prisma.assessmentStudentResult.deleteMany({ where: { schoolId: { in: escolas } } })
-  await prisma.import.deleteMany({ where: { schoolId: { in: escolas } } })
-  await prisma.student.deleteMany({ where: { schoolId: { in: escolas } } })
-  await prisma.class.deleteMany({ where: { schoolId: { in: escolas } } })
-  await prisma.auditLog.deleteMany({ where: { userId: { in: usuarios } } })
-  await prisma.assessment.deleteMany({ where: { id: amb.avaliacao } })
-  if (configuracaoCriada !== null) {
-    await prisma.analyticalSettings.deleteMany({ where: { id: configuracaoCriada } })
-  }
-  await prisma.school.deleteMany({ where: { id: { in: escolas } } })
-  await prisma.user.deleteMany({ where: { id: { in: usuarios } } })
+  await limparResiduos()
 })
 
 // ---------------------------------------------------------------------------
@@ -488,8 +543,10 @@ describe('permissão de dados nominais (FR-007a, FR-105)', () => {
       expect(serializado).not.toContain(nome)
     }
 
-    // O código único permanece: identifica sem revelar (FR-131).
-    expect(serializado).toContain(`${PREFIXO}-C1`)
+    // O código único permanece: identifica sem revelar (FR-131). C2 está em Defasagem e
+    // C3 é o não avaliado — as duas listas nominativas do relatório da escola.
+    expect(serializado).toContain(`${PREFIXO}-C2`)
+    expect(serializado).toContain(`${PREFIXO}-C3`)
     expect(serializado).toContain(NOME_SUPRIMIDO)
     expect(relatorio.nominal).toBe(false)
     expect(relatorio.cabecalho.rotuloVersao).toContain('agregada')
@@ -518,7 +575,11 @@ describe('permissão de dados nominais (FR-007a, FR-105)', () => {
 
     // Nível da fonte transcrito, e percentual idêntico nas duas versões.
     expect(
-      valorDoResumo(agregado.relatorio, 'desempenho', 'Nível de aprendizagem (valor da fonte)'),
+      valorDoResumo(
+        agregado.relatorio,
+        'desempenho',
+        'Nível de aprendizagem (valor da fonte)',
+      ),
     ).toBe('Defasagem')
     expect(
       valorDoResumo(agregado.relatorio, 'desempenho', 'Percentual geral de acerto'),

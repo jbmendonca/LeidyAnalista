@@ -88,7 +88,9 @@ function Secao({ secao }: { secao: SecaoRelatorio }) {
                     <td
                       key={secao.colunas[indiceCelula]?.chave ?? String(indiceCelula)}
                       className={`border border-borda px-2 py-1 align-top ${
-                        secao.colunas[indiceCelula]?.numerica ? 'text-right tabular-nums' : ''
+                        secao.colunas[indiceCelula]?.numerica
+                          ? 'text-right tabular-nums'
+                          : ''
                       }`}
                     >
                       <CelulaTexto celula={celula} />
