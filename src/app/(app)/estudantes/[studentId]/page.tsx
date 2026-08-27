@@ -60,7 +60,7 @@ export default async function PaginaFichaDoEstudante({
   const naoAvaliado = ficha.situacao !== 'AVALIADO'
 
   return (
-    <main className="space-y-8 p-4 sm:p-6">
+    <div className="space-y-8 p-4 sm:p-6">
       <header className="space-y-1">
         <Link
           href={`/turmas/${ficha.classId}/painel`}
@@ -296,6 +296,6 @@ export default async function PaginaFichaDoEstudante({
           </>
         )}
       </section>
-    </main>
+    </div>
   )
 }

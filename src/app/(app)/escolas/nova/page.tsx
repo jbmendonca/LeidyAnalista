@@ -21,7 +21,7 @@ export default async function PaginaNovaEscola() {
   if (ctx.role !== 'ADMIN') redirect('/escolas')
 
   return (
-    <main className="space-y-6 p-4 sm:p-6">
+    <div className="space-y-6 p-4 sm:p-6">
       <header className="space-y-1">
         <Link
           href="/escolas"
@@ -40,6 +40,6 @@ export default async function PaginaNovaEscola() {
           <FormularioEscola acao={criarEscolaAction} rotuloEnvio="Cadastrar escola" />
         </CardContent>
       </Card>
-    </main>
+    </div>
   )
 }

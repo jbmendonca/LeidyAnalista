@@ -35,7 +35,7 @@ export default async function PaginaNovaImportacao() {
   const faltaCadastro = avaliacoes.length === 0 || escolas.length === 0
 
   return (
-    <main className="space-y-6 p-4 sm:p-6">
+    <div className="space-y-6 p-4 sm:p-6">
       <header>
         <h1 className="text-xl font-semibold text-texto">Nova importação</h1>
         <p className="text-sm text-texto-suave">
@@ -63,6 +63,6 @@ export default async function PaginaNovaImportacao() {
           limiteMb={env.IMPORT_MAX_FILE_SIZE_MB}
         />
       )}
-    </main>
+    </div>
   )
 }

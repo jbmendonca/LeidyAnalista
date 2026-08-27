@@ -30,15 +30,46 @@ for (const rota of ROTAS) {
     await page.goto(rota)
     await page.waitForLoadState('networkidle')
 
-    const excesso = await page.evaluate(() => {
-      const doc = document.documentElement
-      return doc.scrollWidth - doc.clientWidth
+    const medida = await page.evaluate(() => {
+      // `scrollWidth - clientWidth` NÃO serve aqui: com `overflow-x: hidden`
+      // na raiz, ele continua reportando a extensão do conteúdo mesmo quando a
+      // página não rola. O que importa é se a pessoa CONSEGUE rolar.
+      const antes = window.scrollX
+      window.scrollTo(9999, 0)
+      const depois = window.scrollX
+      window.scrollTo(antes, 0)
+
+      // E, separadamente, se algum conteúdo ficou inalcançável: transbordo
+      // fora de qualquer contêiner rolável é conteúdo perdido, não contido.
+      const largura = document.documentElement.clientWidth
+      const clipado = (el: Element): boolean => {
+        let p = el.parentElement
+        while (p) {
+          const ox = getComputedStyle(p).overflowX
+          if (ox === 'auto' || ox === 'scroll') return true
+          p = p.parentElement
+        }
+        return false
+      }
+      const inalcancaveis = [...document.querySelectorAll('body *')]
+        .filter((el) => {
+          const r = el.getBoundingClientRect()
+          return r.width > 0 && r.right > largura + 1 && !clipado(el)
+        })
+        .map((el) => `${el.tagName}.${(el.className || '').toString().slice(0, 40)}`)
+
+      return { rolouHorizontal: depois > antes, inalcancaveis: inalcancaveis.slice(0, 3) }
     })
 
     expect(
-      excesso,
-      `${rota} em ${info.project.name} transborda ${excesso}px na horizontal`,
-    ).toBeLessThanOrEqual(1)
+      medida.rolouHorizontal,
+      `${rota} em ${info.project.name} rola na horizontal`,
+    ).toBe(false)
+
+    expect(
+      medida.inalcancaveis,
+      `${rota} em ${info.project.name} tem conteúdo transbordando fora de contêiner rolável`,
+    ).toEqual([])
   })
 }
 

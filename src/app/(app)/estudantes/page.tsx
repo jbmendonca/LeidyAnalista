@@ -75,7 +75,7 @@ export default async function PaginaEstudantes({
   const urlExportacao = `/api/students/roster${consulta === '' ? '' : `?${consulta}`}`
 
   return (
-    <main
+    <div
       id="conteudo-principal"
       className="mx-auto w-full max-w-6xl space-y-6 px-4 py-8"
     >
@@ -215,6 +215,6 @@ export default async function PaginaEstudantes({
           </TableBody>
         </Table>
       </TableContainer>
-    </main>
+    </div>
   )
 }

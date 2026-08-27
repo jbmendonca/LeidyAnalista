@@ -64,7 +64,7 @@ export default async function PaginaImportacoes() {
   const podeImportar = ctx.role === 'ADMIN' || ctx.role === 'ANALISTA'
 
   return (
-    <main className="space-y-6 p-4 sm:p-6">
+    <div className="space-y-6 p-4 sm:p-6">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-xl font-semibold text-texto">Importações</h1>
@@ -176,6 +176,6 @@ export default async function PaginaImportacoes() {
           </Table>
         </TableContainer>
       )}
-    </main>
+    </div>
   )
 }

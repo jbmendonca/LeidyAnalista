@@ -134,7 +134,7 @@ export default async function PaginaImpressaoDeRelatorio({
   await registrarExportacaoDeRelatorio(escopo, 'IMPRESSAO', relatorio)
 
   return (
-    <main id="conteudo-principal" className="mx-auto w-full max-w-[60rem] space-y-6 p-6">
+    <div id="conteudo-principal" className="mx-auto w-full max-w-[60rem] space-y-6 p-6">
       <div className="nao-imprimir flex flex-wrap items-center justify-between gap-3 rounded border border-borda bg-superficie-tenue p-3">
         <p className="text-sm text-texto-suave">
           Use <strong>Imprimir</strong> e escolha <strong>Salvar como PDF</strong> no
@@ -191,6 +191,6 @@ export default async function PaginaImpressaoDeRelatorio({
             "b.addEventListener('click',function(){window.print()})})",
         }}
       />
-    </main>
+    </div>
   )
 }

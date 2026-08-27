@@ -67,6 +67,11 @@ test('importa o arquivo de referência e confirma os números na pré-visualiza�
 })
 
 test('confirma a importação e persiste os 111 registros', async ({ page }) => {
+  // Confirmar cria 4 turmas, 111 estudantes com código único e 111 resultados
+  // com 12 habilidades cada, tudo numa transação. O limite padrão de 30 s não
+  // cobre isso na primeira execução.
+  test.setTimeout(180_000)
+
   await entrar(page, admin)
 
   const importacao = await prisma.import.findFirstOrThrow({
@@ -81,7 +86,10 @@ test('confirma a importação e persiste os 111 registros', async ({ page }) => 
   }
 
   await page.getByRole('button', { name: /confirmar importação/i }).click()
-  await expect(page.getByRole('alert')).toContainText(/confirmada|persistidos/i, {
+
+  // Mensagem de sucesso é anunciada como `status` (polida), não como `alert`
+  // (assertiva) — asserção por texto evita depender dessa distinção.
+  await expect(page.locator('main')).toContainText(/confirmada|persistidos/i, {
     timeout: 120_000,
   })
 

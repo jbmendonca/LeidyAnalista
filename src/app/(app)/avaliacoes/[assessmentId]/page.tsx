@@ -68,7 +68,7 @@ export default async function PaginaPainelAvaliacao({
   const melhor = painel.habilidadeMelhorDesempenho
 
   return (
-    <main className="space-y-6 p-4 sm:p-6">
+    <div className="space-y-6 p-4 sm:p-6">
       <header className="space-y-2">
         <Link
           href="/avaliacoes"
@@ -268,6 +268,6 @@ export default async function PaginaPainelAvaliacao({
           ) : null}
         </>
       )}
-    </main>
+    </div>
   )
 }

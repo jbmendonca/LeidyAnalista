@@ -395,22 +395,22 @@ T001 a T188 seguem a ordem de execução. **T189 a T196 foram acrescentadas em 2
 
 **Propósito**: **US7 (P3)**.
 
-- [ ] T143 [P] [US7] Implementar o relatório geral em `src/modules/reports/application/general-report.ts` (FR-102)
-- [ ] T144 [P] [US7] Implementar o relatório por escola em `src/modules/reports/application/school-report.ts`
-- [ ] T145 [P] [US7] Implementar o relatório por turma em `src/modules/reports/application/class-report.ts`
-- [ ] T146 [P] [US7] Implementar o relatório por habilidade em `src/modules/reports/application/skill-report.ts`
-- [ ] T147 [P] [US7] Implementar o relatório individual em `src/modules/reports/application/student-report.ts`
-- [ ] T148 [US7] Implementar o cabeçalho comum de relatório em `src/modules/reports/domain/report-header.ts`
+- [X] T143 [P] [US7] Implementar o relatório geral em `src/modules/reports/application/general-report.ts` (FR-102)
+- [X] T144 [P] [US7] Implementar o relatório por escola em `src/modules/reports/application/school-report.ts`
+- [X] T145 [P] [US7] Implementar o relatório por turma em `src/modules/reports/application/class-report.ts`
+- [X] T146 [P] [US7] Implementar o relatório por habilidade em `src/modules/reports/application/skill-report.ts`
+- [X] T147 [P] [US7] Implementar o relatório individual em `src/modules/reports/application/student-report.ts`
+- [X] T148 [US7] Implementar o cabeçalho comum de relatório em `src/modules/reports/domain/report-header.ts`
   - ✓ avaliação, escola, filtros, versão de `AnalyticalSettings`, data/hora e solicitante (FR-106, FR-166)
-- [ ] T149 [US7] Implementar a exportação CSV em `src/app/api/reports/[tipo]/csv/route.ts`
+- [X] T149 [US7] Implementar a exportação CSV em `src/app/api/reports/[tipo]/csv/route.ts`
   - ✓ gerada no servidor; acentos e separador decimal pt-BR corretos (FR-108)
-- [ ] T150 [US7] Implementar a exportação XLSX em `src/app/api/reports/[tipo]/xlsx/route.ts`
-- [ ] T151 [US7] Implementar a rota de impressão em `src/app/relatorios/[tipo]/imprimir/page.tsx`
+- [X] T150 [US7] Implementar a exportação XLSX em `src/app/api/reports/[tipo]/xlsx/route.ts`
+- [X] T151 [US7] Implementar a rota de impressão em `src/app/relatorios/[tipo]/imprimir/page.tsx`
   - ✓ folha `@media print`; sem dependência de serviço externo (R-009)
-- [ ] T152 [US7] Aplicar filtros e escopo a todas as exportações em `src/modules/reports/application/report-scope.ts` (FR-104)
-- [ ] T153 [US7] Aplicar a permissão de dados nominais aos relatórios em `src/modules/reports/application/nominal-authorization.ts` (FR-105)
+- [X] T152 [US7] Aplicar filtros e escopo a todas as exportações em `src/modules/reports/application/report-scope.ts` (FR-104)
+- [X] T153 [US7] Aplicar a permissão de dados nominais aos relatórios em `src/modules/reports/application/nominal-authorization.ts` (FR-105)
   - ✓ usuário sem `canAccessNominalData` recebe **versão agregada**, nunca negação (FR-007a); a supressão ocorre na consulta, não na renderização
-- [ ] T154 [US7] Teste de integração de coerência tela × exportação em `tests/integration/reports.test.ts`
+- [X] T154 [US7] Teste de integração de coerência tela × exportação em `tests/integration/reports.test.ts`
   - ✓ valores idênticos, mesmo arredondamento (FR-107)
 
 ---
@@ -439,13 +439,13 @@ T001 a T188 seguem a ordem de execução. **T189 a T196 foram acrescentadas em 2
 
 **Propósito**: passagem de auditoria sobre o que a Fase 2 implementou. Fecha a **US3**.
 
-- [ ] T163 [US3] Revisar toda entrada de servidor contra as cinco regras de [contracts/http-api.md](contracts/http-api.md), atualizando `tests/integration/authorization.test.ts`
+- [X] T163 [US3] Revisar toda entrada de servidor contra as cinco regras de [contracts/http-api.md](contracts/http-api.md), atualizando `tests/integration/authorization.test.ts`
   - ✓ cada entrada tem linha na matriz de autorização de T032
-- [ ] T164 [US3] Auditar o isolamento por escola em telas, filtros, buscas, contagens e mensagens de erro, em `tests/integration/school-isolation.test.ts`
+- [X] T164 [US3] Auditar o isolamento por escola em telas, filtros, buscas, contagens e mensagens de erro, em `tests/integration/school-isolation.test.ts`
   - ✓ nenhuma revela existência de escola não autorizada; 404, nunca 403 (SC-009)
 - [X] T165 [US3] Auditar ausência de PII em logs de aplicação e em `AuditLog`
   - ✓ varredura automatizada de campos nominais em `tests/integration/pii-guard.test.ts` (FR-009)
-- [ ] T166 [US3] Auditar o acesso a relatórios nominais nos cinco tipos em `tests/integration/nominal-reports.test.ts` (FR-105)
+- [X] T166 [US3] Auditar o acesso a relatórios nominais nos cinco tipos em `tests/integration/nominal-reports.test.ts` (FR-105)
 - [X] T167 [US1] Endurecer a validação de upload em `src/app/api/imports/route.ts`
   - ✓ extensão, MIME, assinatura de conteúdo e limite de tamanho; arquivo fora do padrão rejeitado antes de qualquer parsing
 - [X] T168 [US1] Restringir permissões do diretório `IMPORT_STORAGE_DIR`
@@ -496,10 +496,10 @@ T001 a T188 seguem a ordem de execução. **T189 a T196 foram acrescentadas em 2
 - [X] T183 [P] Documentar o fluxo de importação passo a passo no `README.md`
 - [X] T184 [P] Documentar a execução de testes, E2E, regressão e build no `README.md`
 - [X] T185 [P] Documentar em `README.md` a política de dados: o arquivo real não é versionado e a fixture é anonimizada
-- [ ] T186 Executar integralmente os sete cenários de `specs/001-painel-analise-leitura/quickstart.md` contra o sistema construído
-- [ ] T187 Reavaliar `specs/001-painel-analise-leitura/checklists/pre-implementacao.md` contra o que foi implementado
+- [X] T186 Executar integralmente os sete cenários de `specs/001-painel-analise-leitura/quickstart.md` contra o sistema construído
+- [X] T187 Reavaliar `specs/001-painel-analise-leitura/checklists/pre-implementacao.md` contra o que foi implementado
   - ✓ os sete achados resolvidos ou explicitamente aceitos
-- [ ] T188 Fechar as pendências P-1 a P-4 de `specs/001-painel-analise-leitura/research.md` ou registrar a aceitação de cada uma
+- [X] T188 Fechar as pendências P-1 a P-4 de `specs/001-painel-analise-leitura/research.md` ou registrar a aceitação de cada uma
 
 **Checkpoint**: MVP entregável.
 

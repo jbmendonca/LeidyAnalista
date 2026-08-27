@@ -45,7 +45,7 @@ export default async function PaginaNovoEstudante() {
   ])
 
   return (
-    <main
+    <div
       id="conteudo-principal"
       className="mx-auto w-full max-w-2xl space-y-6 px-4 py-8"
     >
@@ -82,6 +82,6 @@ export default async function PaginaNovoEstudante() {
           </CardContent>
         </Card>
       )}
-    </main>
+    </div>
   )
 }

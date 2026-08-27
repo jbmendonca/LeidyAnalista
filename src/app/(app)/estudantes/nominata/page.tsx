@@ -30,7 +30,7 @@ export default async function PaginaNominata() {
   })
 
   return (
-    <main
+    <div
       id="conteudo-principal"
       className="mx-auto w-full max-w-4xl space-y-6 px-4 py-8"
     >
@@ -57,6 +57,6 @@ export default async function PaginaNominata() {
           />
         </CardContent>
       </Card>
-    </main>
+    </div>
   )
 }

@@ -73,20 +73,20 @@ export default async function PaginaPainelDaTurma({
 
   if (!conteudo) {
     return (
-      <main className="space-y-6 p-4 sm:p-6">
+      <div className="space-y-6 p-4 sm:p-6">
         {cabecalho}
         <EmptyState
           titulo="Esta turma ainda não tem resultados importados"
           orientacao="Nenhuma avaliação com resultados foi encontrada para esta turma. Nenhum indicador é exibido enquanto não houver importação confirmada — ausência de dado não é desempenho zero nem participação zero."
         />
-      </main>
+      </div>
     )
   }
 
   const { participacao, desempenho, distribuicao, faixas } = conteudo
 
   return (
-    <main className="space-y-8 p-4 sm:p-6">
+    <div className="space-y-8 p-4 sm:p-6">
       {cabecalho}
 
       {/* FR-078 — participação e desempenho, cada número com sua procedência ao lado. */}
@@ -271,6 +271,6 @@ export default async function PaginaPainelDaTurma({
           atencaoMaxTexto={faixas.atencaoMaxTexto}
         />
       </section>
-    </main>
+    </div>
   )
 }

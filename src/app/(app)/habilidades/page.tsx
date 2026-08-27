@@ -67,7 +67,7 @@ export default async function PaginaHabilidades({
     const sufixo = query.toString()
 
     return (
-      <main className="space-y-6 p-4 sm:p-6">
+      <div className="space-y-6 p-4 sm:p-6">
         <header className="space-y-1">
           <h1 className="text-xl font-semibold text-texto">Habilidades</h1>
           <p className="text-sm text-texto-suave">
@@ -153,7 +153,7 @@ export default async function PaginaHabilidades({
             <LegendaFaixaAnalitica />
           </>
         )}
-      </main>
+      </div>
     )
   } catch (erro) {
     // Escola fora do escopo responde 404, jamais 403: o 403 confirmaria a existência da

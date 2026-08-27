@@ -25,7 +25,7 @@ export default async function PaginaNovaTurma() {
   const escolas = await listarEscolasParaSelecao(ctx)
 
   return (
-    <main className="space-y-6 p-4 sm:p-6">
+    <div className="space-y-6 p-4 sm:p-6">
       <header className="space-y-1">
         <Link
           href="/turmas"
@@ -55,6 +55,6 @@ export default async function PaginaNovaTurma() {
           </CardContent>
         </Card>
       )}
-    </main>
+    </div>
   )
 }

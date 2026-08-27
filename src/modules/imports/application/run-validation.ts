@@ -19,6 +19,7 @@ import { normalizeStudentName } from '@/modules/students/domain/normalize-name'
 import { normalizeClassCode } from '@/modules/classes/domain/normalize-class-code'
 import { normalizarCodigoUnico } from '@/modules/students/domain/unique-code'
 import { conflito } from '@/server/http-errors'
+import { reconciliarEstudantes } from './resolve-students'
 import { logger } from '@/server/logger'
 
 /**
@@ -157,6 +158,26 @@ export async function runValidation(importId: string): Promise<ResultadoValidaca
   // --- colisões contra a avaliação (FR-148) ---------------------------------
   inconsistencias.push(...(await detectarColisoesNaAvaliacao(registro.assessmentId, linhas)))
 
+  // --- reconciliação com a base cadastral (FR-171 a FR-173) -----------------
+  //
+  // Precisa acontecer AQUI, e não só na confirmação: é a pré-visualização que
+  // tem de mostrar quem não está cadastrado, quem ficou ambíguo por homônimo e
+  // quem está cadastrado mas ausente do arquivo. Deixar isso para a confirmação
+  // faria o usuário aprovar uma leitura e receber um erro sem caminho de saída.
+  const { propostas, inconsistencias: doVinculo } = await reconciliarEstudantes(
+    registro.schoolId,
+    linhas.map((l) => ({
+      rowNumber: l.rowNumber,
+      codigoTurmaNormalizado: l.codigoTurmaNormalizado,
+      nomeOriginal: l.nomeOriginal,
+      nomeNormalizado: l.nomeNormalizado,
+      codigoUnico: l.codigoUnico,
+    })),
+  )
+  inconsistencias.push(...doVinculo)
+
+  const vinculoPorLinha = new Map(propostas.map((p) => [p.rowNumber, p]))
+
   // --- denominadores divergentes (FR-046) -----------------------------------
   const entradasDenominador = linhas.flatMap((l) =>
     Object.entries(l.habilidades)
@@ -229,7 +250,10 @@ export async function runValidation(importId: string): Promise<ResultadoValidaca
       turma: l.turma,
       anoEscolar: l.anoEscolar,
     } as unknown as Prisma.InputJsonValue,
-    resolutionKind: ResolutionKind.UNRESOLVED,
+    ...(vinculoPorLinha.get(l.rowNumber)?.studentId
+      ? { resolvedStudentId: vinculoPorLinha.get(l.rowNumber)!.studentId as string }
+      : {}),
+    resolutionKind: vinculoPorLinha.get(l.rowNumber)?.kind ?? ResolutionKind.UNRESOLVED,
     blocked: linhasBloqueadas.has(l.rowNumber),
   }))
 

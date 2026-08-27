@@ -97,7 +97,7 @@ export default async function PaginaRelatorios({
   }
 
   return (
-    <main className="space-y-6 p-4 sm:p-6">
+    <div className="space-y-6 p-4 sm:p-6">
       <header>
         <h1 className="text-xl font-semibold text-texto">Relatórios</h1>
         <p className="text-sm text-texto-suave">
@@ -273,6 +273,6 @@ export default async function PaginaRelatorios({
           orientacao="Todo relatório nasce de uma avaliação: é dela que vêm as habilidades, os denominadores apurados e os resultados. Selecione uma acima para liberar as exportações."
         />
       )}
-    </main>
+    </div>
   )
 }

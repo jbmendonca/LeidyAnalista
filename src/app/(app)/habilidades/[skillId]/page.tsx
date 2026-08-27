@@ -90,7 +90,7 @@ export default async function PaginaHabilidade({
 
     if (detalhe === null) {
       return (
-        <main className="space-y-6 p-4 sm:p-6">
+        <div className="space-y-6 p-4 sm:p-6">
           <header className="space-y-1">
             <h1 className="text-xl font-semibold text-texto">Habilidade</h1>
           </header>
@@ -114,7 +114,7 @@ export default async function PaginaHabilidade({
               </Link>
             }
           />
-        </main>
+        </div>
       )
     }
 
@@ -122,7 +122,7 @@ export default async function PaginaHabilidade({
     const semRegistros = detalhe.estudantesComResultado === 0
 
     return (
-      <main className="space-y-6 p-4 sm:p-6">
+      <div className="space-y-6 p-4 sm:p-6">
         {/* --- FR-083: identificação da habilidade ------------------------- */}
         <header className="space-y-2">
           <p className="text-rotulo text-texto-suave">
@@ -340,7 +340,7 @@ export default async function PaginaHabilidade({
             <LegendaFaixaAnalitica />
           </>
         )}
-      </main>
+      </div>
     )
   } catch (erro) {
     if (erro instanceof AppError && erro.codigo === 'NAO_ENCONTRADO') notFound()

@@ -62,7 +62,7 @@ export default async function PaginaPreVisualizacao({
   const alertas = inconsistenciasPorTipo.filter((i) => i.severity === 'WARNING')
 
   return (
-    <main className="space-y-6 p-4 sm:p-6">
+    <div className="space-y-6 p-4 sm:p-6">
       <header>
         <h1 className="text-xl font-semibold text-texto">{resumo.arquivo}</h1>
         <p className="text-sm text-texto-suave">
@@ -199,7 +199,7 @@ export default async function PaginaPreVisualizacao({
           </p>
         </CardContent>
       </Card>
-    </main>
+    </div>
   )
 }
 
