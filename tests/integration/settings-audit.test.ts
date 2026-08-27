@@ -445,6 +445,35 @@ afterAll(async () => {
   await prisma.userSchool.deleteMany({ where: { userId: { in: criados.userIds } } })
   await prisma.school.deleteMany({ where: { id: { in: criados.schoolIds } } })
   await prisma.user.deleteMany({ where: { id: { in: criados.userIds } } })
+
+  // Rede de segurança por prefixo.
+  //
+  // Os arrays acima dependem de toda criação lembrar de registrar o id, e
+  // uma que esqueça deixa resíduo num banco compartilhado por todos os
+  // arquivos de teste. O prefixo `ZZTEST-CFG-` é criado só por este arquivo,
+  // então varrer por ele é seguro e não depende de disciplina.
+  const PREF = 'ZZTEST-CFG-'
+  await prisma.studentSkillResult.deleteMany({
+    where: { skill: { shortCode: { startsWith: PREF } } },
+  })
+  await prisma.assessmentSkill.deleteMany({
+    where: { skill: { shortCode: { startsWith: PREF } } },
+  })
+  await prisma.skill.deleteMany({ where: { shortCode: { startsWith: PREF } } })
+  await prisma.class.deleteMany({ where: { school: { code: { startsWith: PREF } } } })
+  await prisma.userSchool.deleteMany({ where: { school: { code: { startsWith: PREF } } } })
+  await prisma.school.deleteMany({ where: { code: { startsWith: PREF } } })
+  await prisma.auditLog.deleteMany({
+    where: { user: { email: { contains: '@teste.local' } } },
+  })
+  await prisma.session.deleteMany({
+    where: { user: { email: { contains: '@teste.local' } } },
+  })
+  await prisma.analyticalSettings.deleteMany({
+    where: { createdBy: { email: { contains: '@teste.local' } } },
+  })
+  await prisma.user.deleteMany({ where: { email: { contains: '@teste.local' } } })
+
   await prisma.$disconnect()
 })
 
