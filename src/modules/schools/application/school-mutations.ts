@@ -1,7 +1,11 @@
 import { Prisma } from '@prisma/client'
 
 import { prisma } from '@/server/prisma'
-import { assertSchoolInScope, requireRole, type AuthContext } from '@/server/authorization'
+import {
+  assertSchoolInScope,
+  requireRole,
+  type AuthContext,
+} from '@/server/authorization'
 import { conflito, naoEncontrado } from '@/server/http-errors'
 import { registrarAuditoria } from '@/modules/audit/infra/audit-repository'
 import type { EntradaEscola } from '@/modules/schools/schemas'

@@ -10,7 +10,10 @@ import { z } from 'zod'
 
 const obrigatorio = (rotulo: string, max: number) =>
   z
-    .string({ required_error: `Informe ${rotulo}.`, invalid_type_error: `Informe ${rotulo}.` })
+    .string({
+      required_error: `Informe ${rotulo}.`,
+      invalid_type_error: `Informe ${rotulo}.`,
+    })
     .trim()
     .min(1, `Informe ${rotulo}.`)
     .max(max, `${rotulo} deve ter no máximo ${max} caracteres.`)

@@ -31,7 +31,10 @@ export default async function PaginaEditarEscola({
   return (
     <main className="space-y-6 p-4 sm:p-6">
       <header className="space-y-1">
-        <Link href="/escolas" className="text-rotulo text-primaria underline underline-offset-4">
+        <Link
+          href="/escolas"
+          className="text-rotulo text-primaria underline underline-offset-4"
+        >
           Voltar para escolas
         </Link>
         <h1 className="text-xl font-semibold text-texto">Editar escola</h1>

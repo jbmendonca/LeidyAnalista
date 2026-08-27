@@ -14,7 +14,10 @@ const ANO_MAXIMO = 2100
 
 const obrigatorio = (rotulo: string, max: number) =>
   z
-    .string({ required_error: `Informe ${rotulo}.`, invalid_type_error: `Informe ${rotulo}.` })
+    .string({
+      required_error: `Informe ${rotulo}.`,
+      invalid_type_error: `Informe ${rotulo}.`,
+    })
     .trim()
     .min(1, `Informe ${rotulo}.`)
     .max(max, `${rotulo} deve ter no máximo ${max} caracteres.`)
@@ -23,7 +26,10 @@ const obrigatorio = (rotulo: string, max: number) =>
 const anoSchema = z.preprocess(
   (v) => (typeof v === 'string' && v.trim() !== '' ? Number(v.trim()) : v),
   z
-    .number({ required_error: 'Informe o ano.', invalid_type_error: 'O ano deve ser um número.' })
+    .number({
+      required_error: 'Informe o ano.',
+      invalid_type_error: 'O ano deve ser um número.',
+    })
     .int('O ano deve ser um número inteiro.')
     .min(ANO_MINIMO, `O ano deve ser igual ou maior que ${ANO_MINIMO}.`)
     .max(ANO_MAXIMO, `O ano deve ser igual ou menor que ${ANO_MAXIMO}.`),
@@ -38,14 +44,14 @@ const dataAplicacaoSchema = z.preprocess(
       const texto = v.trim()
       if (texto === '') return null
       // `yyyy-mm-dd` do <input type="date"> é lido como UTC para não deslocar o dia.
-      const data = new Date(/^\d{4}-\d{2}-\d{2}$/.test(texto) ? `${texto}T00:00:00Z` : texto)
+      const data = new Date(
+        /^\d{4}-\d{2}-\d{2}$/.test(texto) ? `${texto}T00:00:00Z` : texto,
+      )
       return Number.isNaN(data.getTime()) ? texto : data
     }
     return v
   },
-  z
-    .date({ invalid_type_error: 'Data de aplicação inválida.' })
-    .nullable(),
+  z.date({ invalid_type_error: 'Data de aplicação inválida.' }).nullable(),
 )
 
 export const avaliacaoSchema = z.object({

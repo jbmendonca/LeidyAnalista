@@ -121,7 +121,9 @@ export async function atualizarAvaliacao(
         ano: anterior.ano,
         ciclo: anterior.ciclo,
         componenteCurricular: anterior.componenteCurricular,
-        dataAplicacao: anterior.dataAplicacao ? anterior.dataAplicacao.toISOString() : null,
+        dataAplicacao: anterior.dataAplicacao
+          ? anterior.dataAplicacao.toISOString()
+          : null,
       },
       afterValue: paraAuditoria(entrada),
       metadata: { operacao: 'ATUALIZAR', entidade: ENTIDADE },

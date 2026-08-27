@@ -5,9 +5,12 @@
  * integração precisam do ambiente validado por `src/lib/env.ts`, que lança se
  * uma variável estiver ausente — daí os valores padrão abaixo.
  */
-// `NODE_ENV` é somente leitura nos tipos do Node; a atribuição é legítima em
-// tempo de execução, e este é o lugar certo para fazê-la.
-process.env['NODE_ENV'] = process.env['NODE_ENV'] ?? 'test'
+// `NODE_ENV` é somente leitura nos tipos do Node. A atribuição é legítima em
+// tempo de execução e este é o lugar certo para fazê-la; o cast é o mínimo
+// necessário para dizer isso ao compilador.
+const ambiente = process.env as Record<string, string | undefined>
+ambiente['NODE_ENV'] = ambiente['NODE_ENV'] ?? 'test'
+
 process.env.SESSION_SECRET =
   process.env.SESSION_SECRET ?? 'segredo-de-teste-com-mais-de-32-caracteres-ok'
 process.env.DATABASE_URL =

@@ -16,14 +16,20 @@ import { normalizeClassCode } from '@/modules/classes/domain/normalize-class-cod
 
 const obrigatorio = (rotulo: string, max: number) =>
   z
-    .string({ required_error: `Informe ${rotulo}.`, invalid_type_error: `Informe ${rotulo}.` })
+    .string({
+      required_error: `Informe ${rotulo}.`,
+      invalid_type_error: `Informe ${rotulo}.`,
+    })
     .trim()
     .min(1, `Informe ${rotulo}.`)
     .max(max, `${rotulo} deve ter no máximo ${max} caracteres.`)
 
 export const turmaSchema = z.object({
   schoolId: z
-    .string({ required_error: 'Selecione a escola.', invalid_type_error: 'Selecione a escola.' })
+    .string({
+      required_error: 'Selecione a escola.',
+      invalid_type_error: 'Selecione a escola.',
+    })
     .trim()
     .min(1, 'Selecione a escola.'),
   externalCode: z

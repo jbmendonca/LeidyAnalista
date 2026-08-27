@@ -1,7 +1,11 @@
 import { Prisma } from '@prisma/client'
 
 import { prisma } from '@/server/prisma'
-import { assertSchoolInScope, requireRole, type AuthContext } from '@/server/authorization'
+import {
+  assertSchoolInScope,
+  requireRole,
+  type AuthContext,
+} from '@/server/authorization'
 import { conflito, naoEncontrado } from '@/server/http-errors'
 import { registrarAuditoria } from '@/modules/audit/infra/audit-repository'
 import { normalizeClassCode } from '@/modules/classes/domain/normalize-class-code'
@@ -88,7 +92,13 @@ export async function atualizarTurma(
     return await prisma.$transaction(async (tx) => {
       const anterior = await tx.class.findFirst({
         where: { id: classId, schoolId: { in: [...autor.allowedSchoolIds] } },
-        select: { id: true, schoolId: true, externalCode: true, name: true, anoEscolar: true },
+        select: {
+          id: true,
+          schoolId: true,
+          externalCode: true,
+          name: true,
+          anoEscolar: true,
+        },
       })
       if (!anterior) throw naoEncontrado('Turma')
 
