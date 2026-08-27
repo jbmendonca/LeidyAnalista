@@ -228,7 +228,15 @@ export async function estudantesEmFragilidadePorHabilidade(
   return new Map(linhas.map((l) => [l.skillId, Number(l.total)]))
 }
 
-/** DESEMPENHO POR TURMA — mesma regra: somente avaliados. */
+/**
+ * DESEMPENHO POR TURMA — mesma regra: somente avaliados.
+ *
+ * ATENÇÃO ao consumir: `itens === 0` significa **ausência de dado**, não
+ * desempenho zero. Uma turma sem nenhum avaliado sai daqui como `0/0`, e
+ * dividir isso produziria `0%` — a distorção que o produto existe para
+ * evitar. Passe sempre por um construtor de fração que devolva `null` para
+ * denominador não positivo antes de calcular percentual.
+ */
 export async function desempenhoPorTurma(
   ctx: AuthContext,
   f: FiltrosAnalise,
